@@ -1,0 +1,35 @@
+name: CI build
+
+on: push
+
+jobs:
+  build:
+    runs-on: windows-2022
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Setup .NET 6 SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Run Unit Tests
+        run: dotnet test --no-restore -v normal --filter "FullyQualifiedName~UnitTests" --collect:"XPlat Code Coverage" -r "TestResults" /p:ContinuousIntegrationBuild=true
+
+      - name: Send coverage reports to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          directory: ./TestResults/
+          flags: unittests
+          name: diploma-backend
+          fail_ci_if_error: true
+          verbose: true
