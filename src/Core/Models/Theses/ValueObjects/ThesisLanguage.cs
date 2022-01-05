@@ -10,7 +10,7 @@ public record ThesisLanguage
         Language = language;
     }
     
-    private string Language { get; }
+    public string Language { get; }
 
     public override string ToString()
     {
