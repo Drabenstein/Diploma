@@ -1,5 +1,6 @@
 ﻿using Core.Models.Theses;
 using Core.Models.Theses.ValueObjects;
+using Infrastructure.Database.Utilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -9,23 +10,27 @@ public class ThesisEntityConfiguration : IEntityTypeConfiguration<Thesis>
 {
     public void Configure(EntityTypeBuilder<Thesis> builder)
     {
-        builder.ToTable("Theses");
+        builder.ToTable(nameof(Thesis));
 
         builder.HasKey(x => x.Id);
 
+        builder.HasIdColumnSnakeCased();
+
         builder.Property(x => x.Status)
             .HasConversion<string>()
+            .HasColumnNameSnakeCased()
             .IsRequired();
 
-        builder.Property(x => x.Content);
+        builder.Property(x => x.Content)
+            .HasColumnNameSnakeCased();
 
         builder.Property(x => x.FileFormat)
-            .HasColumnName("file_format")
-            .HasColumnType("varchar(255)")
+            .HasColumnNameSnakeCased()
+            .HasMaxLength(255)
             .HasConversion<string?>(x => x != null ? x.Name : null, _ => ThesisFileFormat.Pdf);
 
         builder.Property(x => x.Language)
-            .HasColumnName("file_format")
+            .HasColumnNameSnakeCased()
             .HasColumnType("varchar(255)")
             .HasConversion<string?>(x => x != null ? x.Language : null,
                 s => s != null
@@ -35,6 +40,7 @@ public class ThesisEntityConfiguration : IEntityTypeConfiguration<Thesis>
                     : null);
 
         builder.Property(x => x.HasConsentToChangeLanguage)
+            .HasColumnNameSnakeCased()
             .HasColumnType("bool");
 
         builder.HasOne(x => x.Topic)

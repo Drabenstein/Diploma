@@ -2,7 +2,6 @@
 using Core.Models.Theses;
 using Core.Models.Topics;
 using Core.Models.Users;
-using Infrastructure.Database.EntityConfiguration;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Database;
