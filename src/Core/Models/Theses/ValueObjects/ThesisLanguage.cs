@@ -2,8 +2,8 @@
 
 public record ThesisLanguage
 {
-    public static readonly ThesisLanguage Polish = new ThesisLanguage("PL");
-    public static readonly ThesisLanguage English = new ThesisLanguage("EN");
+    public static ThesisLanguage Polish { get; } = new ThesisLanguage("PL");
+    public static ThesisLanguage English { get; } = new ThesisLanguage("EN");
     
     private ThesisLanguage(string language)
     {
