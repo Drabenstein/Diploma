@@ -7,7 +7,8 @@ public record User : EntityBase
 {
     private readonly List<Role> _roles;
     private readonly List<AreaOfInterest> _areasOfInterest;
-    
+
+    public User() { }
     public User(string firstName, string lastName, Email email, IEnumerable<Role> roles)
     {
         FirstName = firstName;

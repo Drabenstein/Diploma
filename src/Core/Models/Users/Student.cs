@@ -4,6 +4,7 @@ namespace Core.Models.Users;
 
 public record Student : User
 {
+    public Student() { }
     private readonly List<StudentFieldOfStudy> _studentFieldOfStudies;
 
     public Student(string firstName, string lastName, IEnumerable<Role> roles, int indexNumber) : base(
