@@ -1,4 +1,5 @@
 ﻿using Core.Models.Topics.ValueObjects;
+using Core.Models.Users;
 using Core.SeedWork;
 
 namespace Core.Models.Topics;
@@ -10,4 +11,5 @@ public record FieldOfStudy : EntityBase
     public StudyForm StudyForm { get; set; }
     public int HoursForThesis { get; set; }
     public int Degree { get; set; }
+    public ICollection<StudentFieldOfStudy> studentFieldsOfStudy { get; set; }
 }

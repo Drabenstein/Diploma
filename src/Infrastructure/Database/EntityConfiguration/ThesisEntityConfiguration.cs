@@ -1,5 +1,6 @@
 ﻿using Core.Models.Theses;
 using Core.Models.Theses.ValueObjects;
+using Core.Models.Users;
 using Infrastructure.Database.Utilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -60,6 +61,7 @@ public class ThesisEntityConfiguration : IEntityTypeConfiguration<Thesis>
 
         builder.HasOne(x => x.Student)
             .WithOne()
+            .HasForeignKey<Student>(x => x.Id)
             .IsRequired();
     }
 }

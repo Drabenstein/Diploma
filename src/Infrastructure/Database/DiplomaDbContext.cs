@@ -23,8 +23,8 @@ public class DiplomaDbContext : DbContext
     public DbSet<Student> Students { get; set; }
     public DbSet<AreaOfInterest> AreasOfInterests { get; set; }
     public DbSet<Role> Roles { get; set; }
-    public DbSet<StudentFieldOfStudy> StudentFieldsOfStudies { get; set; }
 
+    public DiplomaDbContext() { }
     public DiplomaDbContext(DbContextOptions options) : base(options)
     {
     }
@@ -33,5 +33,10 @@ public class DiplomaDbContext : DbContext
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(DiplomaDbContext).Assembly);
         base.OnModelCreating(modelBuilder);
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseNpgsql();
     }
 }

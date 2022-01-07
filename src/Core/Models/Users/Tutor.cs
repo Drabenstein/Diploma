@@ -4,6 +4,7 @@ namespace Core.Models.Users;
 
 public record Tutor : User
 {
+    public Tutor() { }
     public Tutor(string firstName, string lastName, Email email, IEnumerable<Role> roles, int pensum,
         TutorPosition position, string department, AcademicDegree academicDegree)
         : base(firstName, lastName, email, roles)
