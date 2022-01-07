@@ -16,5 +16,11 @@ public class AreaOfInterestEntityConfiguration : IEntityTypeConfiguration<AreaOf
         builder.Property(x => x.Name)
             .HasMaxLength(255)
             .IsRequired();
+
+        builder.HasMany(x => x.Users)
+            .WithMany(x => x.AreasOfInterest);
+
+        builder.Navigation(x => x.Users)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
     }
 }

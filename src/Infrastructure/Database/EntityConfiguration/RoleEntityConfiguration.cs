@@ -16,5 +16,11 @@ public class RoleEntityConfiguration : IEntityTypeConfiguration<Role>
         builder.Property(x => x.Name)
             .HasMaxLength(255)
             .IsRequired();
+
+        builder.HasMany(x => x.Users)
+            .WithMany(u => u.Roles);
+
+        builder.Navigation(x => x.Users)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
     }
 }
