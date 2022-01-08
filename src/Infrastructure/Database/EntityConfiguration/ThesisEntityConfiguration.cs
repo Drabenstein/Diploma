@@ -32,7 +32,7 @@ public class ThesisEntityConfiguration : IEntityTypeConfiguration<Thesis>
 
         builder.Property(x => x.Language)
             .HasColumnNameSnakeCased()
-            .HasColumnType("varchar(255)")
+            .HasMaxLength(255)
             .HasConversion<string?>(x => x != null ? x.Language : null,
                 s => s != null
                     ? (s.Equals("en", StringComparison.OrdinalIgnoreCase)
@@ -41,8 +41,7 @@ public class ThesisEntityConfiguration : IEntityTypeConfiguration<Thesis>
                     : null);
 
         builder.Property(x => x.HasConsentToChangeLanguage)
-            .HasColumnNameSnakeCased()
-            .HasColumnType("bool");
+            .HasColumnNameSnakeCased();
 
         builder.HasOne(x => x.Topic)
             .WithMany(t => t.Theses);

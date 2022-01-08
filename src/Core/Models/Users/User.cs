@@ -1,4 +1,5 @@
-﻿using Core.Models.Users.ValueObjects;
+﻿using System.Diagnostics.CodeAnalysis;
+using Core.Models.Users.ValueObjects;
 using Core.SeedWork;
 
 namespace Core.Models.Users;
@@ -8,7 +9,10 @@ public record User : EntityBase
     private readonly List<Role> _roles;
     private readonly List<AreaOfInterest> _areasOfInterest;
 
-    public User() { }
+    // EF Core only
+    [ExcludeFromCodeCoverage]
+    protected User() { }
+    
     public User(string firstName, string lastName, Email email, IEnumerable<Role> roles)
     {
         FirstName = firstName;
@@ -21,6 +25,6 @@ public record User : EntityBase
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public Email Email { get; set; }
-    public IReadOnlyList<Role> Roles => _roles.AsReadOnly();
-    public IReadOnlyList<AreaOfInterest> AreasOfInterest => _areasOfInterest.AsReadOnly();
+    public virtual IReadOnlyCollection<Role> Roles => _roles.AsReadOnly();
+    public virtual IReadOnlyCollection<AreaOfInterest> AreasOfInterest => _areasOfInterest.AsReadOnly();
 }

@@ -8,5 +8,5 @@ public record AreaOfInterest : EntityBase
     
     public string Name { get; init; }
 
-    public IReadOnlyList<User> Users => _users.AsReadOnly();
+    public virtual IReadOnlyCollection<User> Users => _users.AsReadOnly();
 }

@@ -15,5 +15,5 @@ public record Topic : EntityBase
     public string YearOfDefence { get; set; }
     public bool IsProposedByStudent { get; set; }
     public FieldOfStudy FieldOfStudy { get; set; }
-    public IReadOnlyList<Thesis> Theses => _theses.AsReadOnly();
+    public virtual IReadOnlyCollection<Thesis> Theses => _theses.AsReadOnly();
 }
