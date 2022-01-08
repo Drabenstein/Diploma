@@ -10,5 +10,5 @@ public record Review : EntityBase
     public Grade? Grade { get; set; }
     public bool IsPublished { get; set; }
     public DateTime? PublishTimestamp { get; set; }
-    public IReadOnlyList<ReviewModule> ReviewModules => _reviewModules.AsReadOnly();
+    public virtual IReadOnlyCollection<ReviewModule> ReviewModules => _reviewModules.AsReadOnly();
 }

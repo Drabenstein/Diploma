@@ -11,7 +11,7 @@ public class StudentFieldOfStudyEntityConfiguration : IEntityTypeConfiguration<S
     {
         builder.ToTable(nameof(StudentFieldOfStudy));
 
-        builder.HasKey(x => new {x.Student, x.FieldOfStudy});
+        builder.HasKey(x => new { x.StudentId, x.FieldOfStudyId});
 
         builder.Property(x => x.Semester)
             .HasColumnNameSnakeCased()
@@ -28,10 +28,12 @@ public class StudentFieldOfStudyEntityConfiguration : IEntityTypeConfiguration<S
 
         builder.HasOne(x => x.Student)
             .WithMany(s => s.StudentFieldOfStudies)
+            .HasForeignKey(x => x.StudentId)
             .IsRequired();
-
+        
         builder.HasOne(x => x.FieldOfStudy)
-            .WithMany()
+            .WithMany(x => x.StudentFieldsOfStudy)
+            .HasForeignKey(x => x.FieldOfStudyId)
             .IsRequired();
     }
 }

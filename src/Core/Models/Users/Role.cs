@@ -8,7 +8,7 @@ public record Role : EntityBase
     
     public string Name { get; set; }
 
-    public IReadOnlyCollection<User> Users => _users.AsReadOnly();
+    public virtual IReadOnlyCollection<User> Users => _users.AsReadOnly();
 
     public override string ToString()
     {

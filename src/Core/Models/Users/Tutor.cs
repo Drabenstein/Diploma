@@ -1,10 +1,14 @@
-﻿using Core.Models.Users.ValueObjects;
+﻿using System.Diagnostics.CodeAnalysis;
+using Core.Models.Users.ValueObjects;
 
 namespace Core.Models.Users;
 
 public record Tutor : User
 {
-    public Tutor() { }
+    // EF Core only
+    [ExcludeFromCodeCoverage]
+    private Tutor() { }
+    
     public Tutor(string firstName, string lastName, Email email, IEnumerable<Role> roles, int pensum,
         TutorPosition position, string department, AcademicDegree academicDegree)
         : base(firstName, lastName, email, roles)

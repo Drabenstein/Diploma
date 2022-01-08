@@ -2,6 +2,7 @@
 using Core.Models.Theses;
 using Core.Models.Topics;
 using Core.Models.Users;
+using Humanizer;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Database;
@@ -25,18 +26,36 @@ public class DiplomaDbContext : DbContext
     public DbSet<Role> Roles { get; set; }
 
     public DiplomaDbContext() { }
-    public DiplomaDbContext(DbContextOptions options) : base(options)
-    {
-    }
+    public DiplomaDbContext(DbContextOptions options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(DiplomaDbContext).Assembly);
         base.OnModelCreating(modelBuilder);
-    }
+        
+        foreach(var entity in modelBuilder.Model.GetEntityTypes())
+        {
+            entity.SetTableName(entity.GetTableName().Underscore());
+            
+            foreach(var property in entity.GetProperties())
+            {
+                property.SetColumnName(property.GetColumnBaseName().Underscore());
+            }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseNpgsql();
+            foreach(var key in entity.GetKeys())
+            {
+                key.SetName(key.GetName().Underscore());
+            }
+
+            foreach(var key in entity.GetForeignKeys())
+            {
+                key.SetConstraintName(key.GetConstraintName().Underscore());
+            }
+
+            foreach(var index in entity.GetIndexes())
+            {
+                index.SetDatabaseName(index.GetDatabaseName().Underscore());
+            }
+        }
     }
 }

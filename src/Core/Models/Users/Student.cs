@@ -1,10 +1,14 @@
-﻿using Core.Models.Users.ValueObjects;
+﻿using System.Diagnostics.CodeAnalysis;
+using Core.Models.Users.ValueObjects;
 
 namespace Core.Models.Users;
 
 public record Student : User
 {
-    public Student() { }
+    // EF Core only
+    [ExcludeFromCodeCoverage]
+    private Student() { }
+    
     private readonly List<StudentFieldOfStudy> _studentFieldOfStudies;
 
     public Student(string firstName, string lastName, IEnumerable<Role> roles, int indexNumber) : base(
@@ -15,5 +19,5 @@ public record Student : User
     }
 
     public int IndexNumber { get; set; }
-    public IReadOnlyList<StudentFieldOfStudy> StudentFieldOfStudies => _studentFieldOfStudies.AsReadOnly();
+    public virtual IReadOnlyCollection<StudentFieldOfStudy> StudentFieldOfStudies => _studentFieldOfStudies.AsReadOnly();
 }

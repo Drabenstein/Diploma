@@ -37,5 +37,13 @@ public class FieldOfStudyEntityConfiguration : IEntityTypeConfiguration<FieldOfS
         builder.Property(x => x.Degree)
             .HasColumnNameSnakeCased()
             .IsRequired();
+
+        builder.HasMany(x => x.StudentFieldsOfStudy)
+            .WithOne(x => x.FieldOfStudy)
+            .HasForeignKey(x => x.FieldOfStudyId)
+            .IsRequired();
+        
+        builder.Navigation(x => x.StudentFieldsOfStudy)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
     }
 }

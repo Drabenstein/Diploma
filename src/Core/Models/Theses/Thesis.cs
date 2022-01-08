@@ -18,6 +18,6 @@ public record Thesis : EntityBase
     public ThesisLanguage? Language { get; set; }
     public bool? HasConsentToChangeLanguage { get; set; }
     public Student Student { get; set; }
-    public IReadOnlyList<Declaration> Declarations => _declarations.AsReadOnly();
-    public IReadOnlyCollection<Review> Reviews => _reviews.AsReadOnly();
+    public virtual IReadOnlyCollection<Declaration> Declarations => _declarations.AsReadOnly();
+    public virtual IReadOnlyCollection<Review> Reviews => _reviews.AsReadOnly();
 }

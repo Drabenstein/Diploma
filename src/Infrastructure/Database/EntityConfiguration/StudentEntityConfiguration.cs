@@ -17,7 +17,9 @@ public class StudentEntityConfiguration : IEntityTypeConfiguration<Student>
             .IsUnique();
 
         builder.HasMany(x => x.StudentFieldOfStudies)
-            .WithOne();
+            .WithOne(x => x.Student)
+            .HasForeignKey(x => x.StudentId)
+            .IsRequired();
 
         builder.Navigation(x => x.StudentFieldOfStudies)
             .UsePropertyAccessMode(PropertyAccessMode.Field);
