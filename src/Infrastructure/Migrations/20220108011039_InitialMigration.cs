@@ -253,21 +253,21 @@ namespace Infrastructure.Migrations
                 name: "role_user",
                 columns: table => new
                 {
-                    roles_id = table.Column<long>(type: "bigint", nullable: false),
-                    users_id = table.Column<long>(type: "bigint", nullable: false)
+                    role_id = table.Column<long>(type: "bigint", nullable: false),
+                    user_id = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_role_user", x => new { x.roles_id, x.users_id });
+                    table.PrimaryKey("pk_role_user", x => new {x.role_id, x.user_id });
                     table.ForeignKey(
                         name: "fk_role_user_role_roles_id",
-                        column: x => x.roles_id,
+                        column: x => x.role_id,
                         principalTable: "role",
                         principalColumn: "role_id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "fk_role_user_user_users_id",
-                        column: x => x.users_id,
+                        column: x => x.user_id,
                         principalTable: "user",
                         principalColumn: "user_id",
                         onDelete: ReferentialAction.Cascade);
@@ -333,7 +333,7 @@ namespace Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "ix_role_user_users_id",
                 table: "role_user",
-                column: "users_id");
+                column: "user_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_student_field_of_study_field_of_study_id",
