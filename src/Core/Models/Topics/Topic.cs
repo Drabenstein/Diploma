@@ -1,4 +1,5 @@
 ﻿using Core.Models.Theses;
+using Core.Models.Users;
 using Core.SeedWork;
 
 namespace Core.Models.Topics;
@@ -7,6 +8,8 @@ public record Topic : EntityBase
 {
     private readonly List<Thesis> _theses = new List<Thesis>();
 
+    public User Proposer { get; set; }
+    public Tutor Supervisor { get; set; }
     public string Name { get; set; }
     public string EnglishName { get; set; }
     public bool? IsAccepted { get; set; }

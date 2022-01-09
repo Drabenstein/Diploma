@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Database.EntityConfiguration;
 
-public class ApplicationEntityConfiguration : IEntityTypeConfiguration<Application>
+public class ApplicationEntityConfiguration : IEntityTypeConfiguration<Core.Models.Topics.Application>
 {
-    public void Configure(EntityTypeBuilder<Application> builder)
+    public void Configure(EntityTypeBuilder<Core.Models.Topics.Application> builder)
     {
         builder.ToTable(nameof(Application));
         

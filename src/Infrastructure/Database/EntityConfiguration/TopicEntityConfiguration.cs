@@ -51,5 +51,14 @@ public class TopicEntityConfiguration : IEntityTypeConfiguration<Topic>
 
         builder.Navigation(x => x.Theses)
             .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.HasOne(x => x.Proposer)
+            .WithMany()
+            .IsRequired();
+
+        builder.HasOne(x => x.Supervisor)
+            .WithMany()
+            .IsRequired();
+
     }
 }

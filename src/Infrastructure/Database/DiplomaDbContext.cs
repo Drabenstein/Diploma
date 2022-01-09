@@ -16,7 +16,7 @@ public class DiplomaDbContext : DbContext
     public DbSet<Declaration> Declarations { get; set; }
 
     public DbSet<Topic> Topics { get; set; }
-    public DbSet<Application> Applications { get; set; }
+    public DbSet<Core.Models.Topics.Application> Applications { get; set; }
     public DbSet<FieldOfStudy> FieldsOfStudies { get; set; }
     
     public DbSet<User> Users { get; set; }
