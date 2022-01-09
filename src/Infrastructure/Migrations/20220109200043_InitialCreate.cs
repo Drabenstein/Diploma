@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Infrastructure.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -80,21 +80,21 @@ namespace Infrastructure.Migrations
                 name: "area_of_interest_user",
                 columns: table => new
                 {
-                    area_of_interest_id = table.Column<long>(type: "bigint", nullable: false),
-                    user_id = table.Column<long>(type: "bigint", nullable: false)
+                    areas_of_interest_id = table.Column<long>(type: "bigint", nullable: false),
+                    users_id = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_area_of_interest_user", x => new { x.area_of_interest_id, x.user_id });
+                    table.PrimaryKey("pk_area_of_interest_user", x => new { x.areas_of_interest_id, x.users_id });
                     table.ForeignKey(
-                        name: "fk_area_of_interest_user_area_of_interest_area_of_interest_id",
-                        column: x => x.area_of_interest_id,
+                        name: "fk_area_of_interest_user_area_of_interest_areas_of_interest_id",
+                        column: x => x.areas_of_interest_id,
                         principalTable: "area_of_interest",
                         principalColumn: "area_of_interest_id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fk_area_of_interest_user_user_user_id",
-                        column: x => x.user_id,
+                        name: "fk_area_of_interest_user_user_users_id",
+                        column: x => x.users_id,
                         principalTable: "user",
                         principalColumn: "user_id",
                         onDelete: ReferentialAction.Cascade);
@@ -104,21 +104,21 @@ namespace Infrastructure.Migrations
                 name: "role_user",
                 columns: table => new
                 {
-                    role_id = table.Column<long>(type: "bigint", nullable: false),
-                    user_id = table.Column<long>(type: "bigint", nullable: false)
+                    roles_id = table.Column<long>(type: "bigint", nullable: false),
+                    users_id = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_role_user", x => new {x.role_id, x.user_id });
+                    table.PrimaryKey("pk_role_user", x => new { x.roles_id, x.users_id });
                     table.ForeignKey(
-                        name: "fk_role_user_role_role_id",
-                        column: x => x.role_id,
+                        name: "fk_role_user_role_roles_id",
+                        column: x => x.roles_id,
                         principalTable: "role",
                         principalColumn: "role_id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fk_role_user_user_user_id",
-                        column: x => x.user_id,
+                        name: "fk_role_user_user_users_id",
+                        column: x => x.users_id,
                         principalTable: "user",
                         principalColumn: "user_id",
                         onDelete: ReferentialAction.Cascade);
@@ -279,6 +279,7 @@ namespace Infrastructure.Migrations
                 {
                     review_id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    reviewer_id = table.Column<long>(type: "bigint", nullable: false),
                     grade = table.Column<string>(type: "text", nullable: true),
                     is_published = table.Column<bool>(type: "boolean", nullable: false),
                     publish_timestamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -292,6 +293,12 @@ namespace Infrastructure.Migrations
                         column: x => x.thesis_id,
                         principalTable: "thesis",
                         principalColumn: "thesis_id");
+                    table.ForeignKey(
+                        name: "fk_review_user_reviewer_id",
+                        column: x => x.reviewer_id,
+                        principalTable: "user",
+                        principalColumn: "user_id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -327,14 +334,19 @@ namespace Infrastructure.Migrations
                 column: "topic_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_area_of_interest_user_user_id",
+                name: "ix_area_of_interest_user_users_id",
                 table: "area_of_interest_user",
-                column: "user_id");
+                column: "users_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_declaration_thesis_id",
                 table: "declaration",
                 column: "thesis_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_review_reviewer_id",
+                table: "review",
+                column: "reviewer_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_review_thesis_id",
@@ -347,9 +359,9 @@ namespace Infrastructure.Migrations
                 column: "review_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_role_user_user_id",
+                name: "ix_role_user_users_id",
                 table: "role_user",
-                column: "user_id");
+                column: "users_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_student_field_of_study_field_of_study_id",

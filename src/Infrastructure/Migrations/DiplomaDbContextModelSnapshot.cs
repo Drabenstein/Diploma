@@ -62,12 +62,19 @@ namespace Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("publish_timestamp");
 
+                    b.Property<long>("ReviewerId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("reviewer_id");
+
                     b.Property<long?>("ThesisId")
                         .HasColumnType("bigint")
                         .HasColumnName("thesis_id");
 
                     b.HasKey("Id")
                         .HasName("pk_review");
+
+                    b.HasIndex("ReviewerId")
+                        .HasDatabaseName("ix_review_reviewer_id");
 
                     b.HasIndex("ThesisId")
                         .HasDatabaseName("ix_review_thesis_id");
@@ -580,10 +587,19 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Models.Reviews.Review", b =>
                 {
+                    b.HasOne("Core.Models.Users.Tutor", "Reviewer")
+                        .WithMany()
+                        .HasForeignKey("ReviewerId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired()
+                        .HasConstraintName("fk_review_user_reviewer_id");
+
                     b.HasOne("Core.Models.Theses.Thesis", null)
                         .WithMany("Reviews")
                         .HasForeignKey("ThesisId")
                         .HasConstraintName("fk_review_thesis_thesis_id");
+
+                    b.Navigation("Reviewer");
                 });
 
             modelBuilder.Entity("Core.Models.Reviews.ReviewModule", b =>

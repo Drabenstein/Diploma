@@ -32,5 +32,9 @@ public class ReviewEntityConfiguration : IEntityTypeConfiguration<Review>
 
         builder.Navigation(x => x.ReviewModules)
             .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.HasOne(x => x.Reviewer)
+            .WithMany()
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }
