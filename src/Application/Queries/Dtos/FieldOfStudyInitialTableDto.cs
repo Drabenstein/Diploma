@@ -10,5 +10,5 @@ public class FieldOfStudyInitialTableDto<T>
     public string StudyForm { get; set; }
     public string LectureLanguage { get; set; }
     public string DefenceYear { get; set; }
-    private PagedResultDto<T> Data { get; set; }
+    public PagedResultDto<T> Data { get; set; }
 }
