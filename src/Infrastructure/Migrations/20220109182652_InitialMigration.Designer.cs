@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DiplomaDbContext))]
-    [Migration("20220108011039_InitialMigration")]
+    [Migration("20220109182652_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -185,6 +185,10 @@ namespace Infrastructure.Migrations
                         .HasColumnType("character varying(255)")
                         .HasColumnName("language");
 
+                    b.Property<long>("RealizerStudentId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("realizer_student_id");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("text")
@@ -196,6 +200,9 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_thesis");
+
+                    b.HasIndex("RealizerStudentId")
+                        .HasDatabaseName("ix_thesis_realizer_student_id");
 
                     b.HasIndex("TopicId")
                         .HasDatabaseName("ix_thesis_topic_id");
@@ -334,6 +341,14 @@ namespace Infrastructure.Migrations
                         .HasColumnType("character varying(255)")
                         .HasColumnName("name");
 
+                    b.Property<long>("ProposerId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("proposer_id");
+
+                    b.Property<long>("SupervisorId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("supervisor_id");
+
                     b.Property<string>("YearOfDefence")
                         .IsRequired()
                         .HasColumnType("text")
@@ -344,6 +359,12 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("FieldOfStudyId")
                         .HasDatabaseName("ix_topic_field_of_study_id");
+
+                    b.HasIndex("ProposerId")
+                        .HasDatabaseName("ix_topic_proposer_id");
+
+                    b.HasIndex("SupervisorId")
+                        .HasDatabaseName("ix_topic_supervisor_id");
 
                     b.ToTable("topic", (string)null);
                 });
@@ -428,8 +449,11 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Core.Models.Users.User", b =>
                 {
                     b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasColumnName("user_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
@@ -583,12 +607,21 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Models.Theses.Thesis", b =>
                 {
+                    b.HasOne("Core.Models.Users.Student", "RealizerStudent")
+                        .WithMany("Theses")
+                        .HasForeignKey("RealizerStudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_thesis_user_realizer_student_id");
+
                     b.HasOne("Core.Models.Topics.Topic", "Topic")
                         .WithMany("Theses")
                         .HasForeignKey("TopicId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_thesis_topic_topic_id");
+
+                    b.Navigation("RealizerStudent");
 
                     b.Navigation("Topic");
                 });
@@ -621,7 +654,25 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_topic_field_of_study_field_of_study_id");
 
+                    b.HasOne("Core.Models.Users.User", "Proposer")
+                        .WithMany()
+                        .HasForeignKey("ProposerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_topic_user_proposer_id");
+
+                    b.HasOne("Core.Models.Users.Tutor", "Supervisor")
+                        .WithMany()
+                        .HasForeignKey("SupervisorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_topic_user_supervisor_id");
+
                     b.Navigation("FieldOfStudy");
+
+                    b.Navigation("Proposer");
+
+                    b.Navigation("Supervisor");
                 });
 
             modelBuilder.Entity("Core.Models.Users.StudentFieldOfStudy", b =>
@@ -662,16 +713,6 @@ namespace Infrastructure.Migrations
                         .HasConstraintName("fk_role_user_user_users_id");
                 });
 
-            modelBuilder.Entity("Core.Models.Users.Student", b =>
-                {
-                    b.HasOne("Core.Models.Theses.Thesis", null)
-                        .WithOne("Student")
-                        .HasForeignKey("Core.Models.Users.Student", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_user_thesis_user_id");
-                });
-
             modelBuilder.Entity("Core.Models.Reviews.Review", b =>
                 {
                     b.Navigation("ReviewModules");
@@ -682,9 +723,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("Declarations");
 
                     b.Navigation("Reviews");
-
-                    b.Navigation("Student")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Core.Models.Topics.FieldOfStudy", b =>
@@ -700,6 +738,8 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Core.Models.Users.Student", b =>
                 {
                     b.Navigation("StudentFieldOfStudies");
+
+                    b.Navigation("Theses");
                 });
 #pragma warning restore 612, 618
         }

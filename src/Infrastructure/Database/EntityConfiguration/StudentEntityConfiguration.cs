@@ -1,4 +1,5 @@
-﻿using Core.Models.Users;
+﻿using Core.Models.Theses;
+using Core.Models.Users;
 using Infrastructure.Database.Utilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -22,6 +23,12 @@ public class StudentEntityConfiguration : IEntityTypeConfiguration<Student>
             .IsRequired();
 
         builder.Navigation(x => x.StudentFieldOfStudies)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.HasMany(x => x.Theses)
+            .WithOne(x => x.RealizerStudent);
+
+        builder.Navigation(x => x.Theses)
             .UsePropertyAccessMode(PropertyAccessMode.Field);
     }
 }

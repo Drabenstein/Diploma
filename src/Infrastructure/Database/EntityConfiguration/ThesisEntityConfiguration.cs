@@ -58,9 +58,7 @@ public class ThesisEntityConfiguration : IEntityTypeConfiguration<Thesis>
         builder.Navigation(x => x.Reviews)
             .UsePropertyAccessMode(PropertyAccessMode.Field);
 
-        builder.HasOne(x => x.Student)
-            .WithOne()
-            .HasForeignKey<Student>(x => x.Id)
-            .IsRequired();
+        builder.HasOne(x => x.RealizerStudent)
+            .WithMany(x => x.Theses);
     }
 }

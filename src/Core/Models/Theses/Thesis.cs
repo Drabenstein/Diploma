@@ -17,7 +17,7 @@ public record Thesis : EntityBase
     public ThesisFileFormat? FileFormat { get; set; }
     public ThesisLanguage? Language { get; set; }
     public bool? HasConsentToChangeLanguage { get; set; }
-    public Student Student { get; set; }
+    public Student RealizerStudent { get; set; }
     public virtual IReadOnlyCollection<Declaration> Declarations => _declarations.AsReadOnly();
     public virtual IReadOnlyCollection<Review> Reviews => _reviews.AsReadOnly();
 }
