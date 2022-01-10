@@ -1,4 +1,8 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using Amazon;
+using Amazon.Comprehend;
+using Amazon.S3;
+using Amazon.Translate;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Core;
 using Infrastructure.Database;
@@ -51,5 +55,12 @@ public static class DependencyInjectionExtensions
                 }
             };
         });
+    }
+
+    public static void AddAmazonClients(this IServiceCollection services)
+    {
+        services.AddScoped(_ => new AmazonS3Client(RegionEndpoint.USEast1));
+        services.AddScoped(_ => new AmazonTranslateClient(RegionEndpoint.USEast1));
+        services.AddScoped(_ => new AmazonComprehendClient(RegionEndpoint.USEast1));
     }
 }

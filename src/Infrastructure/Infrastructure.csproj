@@ -11,6 +11,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="AWSSDK.Comprehend" Version="3.7.4.45" />
+    <PackageReference Include="AWSSDK.S3" Version="3.7.7.10" />
+    <PackageReference Include="AWSSDK.Translate" Version="3.7.3.10" />
     <PackageReference Include="Humanizer.Core" Version="2.13.14" />
     <PackageReference Include="Meziantou.Analyzer" Version="1.0.679">
       <PrivateAssets>all</PrivateAssets>

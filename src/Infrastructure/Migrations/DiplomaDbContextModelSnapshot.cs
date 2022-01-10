@@ -172,6 +172,16 @@ namespace Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
+                    b.Property<string>("CloudBucket")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("cloud_bucket");
+
+                    b.Property<string>("CloudKey")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("cloud_key");
+
                     b.Property<byte[]>("Content")
                         .HasColumnType("bytea")
                         .HasColumnName("content");

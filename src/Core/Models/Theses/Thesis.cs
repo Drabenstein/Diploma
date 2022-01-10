@@ -20,4 +20,6 @@ public record Thesis : EntityBase
     public Student RealizerStudent { get; set; }
     public virtual IReadOnlyCollection<Declaration> Declarations => _declarations.AsReadOnly();
     public virtual IReadOnlyCollection<Review> Reviews => _reviews.AsReadOnly();
+    public string CloudBucket { get; set; }
+    public string CloudKey { get; set; }
 }

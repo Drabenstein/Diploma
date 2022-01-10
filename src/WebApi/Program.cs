@@ -11,6 +11,7 @@ builder.Services.AddMediatR(typeof(PagedResultDto<>).Assembly);
 builder.Services.AddAuth0Authentication(builder.Configuration);
 string connectionString = builder.Configuration.GetConnectionString("DiplomaDb");
 builder.Services.AddDatabaseServices(connectionString);
+builder.Services.AddAmazonClients();
 
 var app = builder.Build();
 
