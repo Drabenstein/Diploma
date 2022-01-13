@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Application.Queries;
 
-public class GetSupervisedTheses
+public static class GetSupervisedTheses
 {
     public class Query : IRequest<IEnumerable<FieldOfStudyInitialTableDto<SupervisedThesisDto>>>
     {

@@ -13,7 +13,7 @@ public static class GetSupervisedThesesForYearOfDefenceAndField
     {
         public long TutorId { get; init; }
         public long FieldOfStudyId { get; init; }
-        public string YearOfDefence { get; init; }
+        public string YearOfDefence { get; init; } = null!;
         public long Page { get; init; }
         public long ItemsPerPage { get; init; }
     }

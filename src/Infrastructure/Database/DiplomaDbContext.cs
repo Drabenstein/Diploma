@@ -25,9 +25,11 @@ public class DiplomaDbContext : DbContext
     public DbSet<AreaOfInterest> AreasOfInterests { get; set; }
     public DbSet<Role> Roles { get; set; }
 
+#pragma warning disable CS8618
     public DiplomaDbContext() { }
     public DiplomaDbContext(DbContextOptions options) : base(options) { }
-
+#pragma warning restore CS8618
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(DiplomaDbContext).Assembly);
