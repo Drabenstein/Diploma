@@ -13,15 +13,15 @@ public static class AcademicDegreeTranslatorExtensions
 
         return title switch
         {
-            "AcademicDegree.Engineer" => "inż.",
-            "AcademicDegree.MasterOfScience" => "mgr",
-            "AcademicDegree.MasterOfScienceBEng" => "mgr inż.",
-            "AcademicDegree.DoctorOfPhilosophy" => "dr",
-            "AcademicDegree.DoctorOfPhilosophyBEng" => "dr inż.",
-            "AcademicDegree.DoctorOfScience" => "dr hab.",
-            "AcademicDegree.DoctorOfScienceBEng" => "dr hab. inż.",
-            "AcademicDegree.ProfessorOfUniversity" => "prof. dr hab.",
-            "AcademicDegree.Professor" => "prof. dr hab. inż.",
+            "Engineer" => "inż.",
+            "MasterOfScience" => "mgr",
+            "MasterOfScienceBEng" => "mgr inż.",
+            "DoctorOfPhilosophy" => "dr",
+            "DoctorOfPhilosophyBEng" => "dr inż.",
+            "DoctorOfScience" => "dr hab.",
+            "DoctorOfScienceBEng" => "dr hab. inż.",
+            "ProfessorOfUniversity" => "prof. dr hab.",
+            "Professor" => "prof. dr hab. inż.",
             _ => throw new ArgumentOutOfRangeException(nameof(title))
         };
     }
