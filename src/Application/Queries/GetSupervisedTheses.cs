@@ -8,10 +8,7 @@ namespace Application.Queries;
 
 public static class GetSupervisedTheses
 {
-    public class Query : IRequest<IEnumerable<FieldOfStudyInitialTableDto<SupervisedThesisDto>>>
-    {
-        public long TutorId { get; init; }
-    }
+    public record Query(long TutorId) : IRequest<IEnumerable<FieldOfStudyInitialTableDto<SupervisedThesisDto>>>;
 
     public class Handler : IRequestHandler<Query, IEnumerable<FieldOfStudyInitialTableDto<SupervisedThesisDto>>>
     {
@@ -66,14 +63,10 @@ public static class GetSupervisedTheses
         private GetSupervisedThesesForYearOfDefenceAndField.Query CreateDataQuery(long tutorId, string defenceYear,
             long fieldOfStudyId)
         {
-            return new GetSupervisedThesesForYearOfDefenceAndField.Query
-            {
-                Page = 0,
-                TutorId = tutorId,
-                ItemsPerPage = DefaultItemsPerPage,
-                YearOfDefence = defenceYear,
-                FieldOfStudyId = fieldOfStudyId
-            };
+            const long defaultPage = 0;
+            return new GetSupervisedThesesForYearOfDefenceAndField.Query(TutorId: tutorId,
+                FieldOfStudyId: fieldOfStudyId, YearOfDefence: defenceYear, Page: defaultPage,
+                ItemsPerPage: DefaultItemsPerPage);
         }
     }
 
