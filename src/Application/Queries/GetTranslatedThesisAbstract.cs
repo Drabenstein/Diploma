@@ -11,20 +11,23 @@ public static class GetTranslatedThesisAbstract
     {
 
         private readonly ITranslationService _translationService;
+        private readonly IComprehendService _comprehendService;
 
-        public Handler(ITranslationService translationService)
+        public Handler(ITranslationService translationService, IComprehendService comprehendService)
         {
             _translationService = translationService;
+            _comprehendService = comprehendService;
         }
-        //todo: to discuss - use comprehend to detect language and choose source language code?
         public async Task<string> Handle(Query query, CancellationToken cancellationToken)
         {
-            var translatedText =
-                await _translationService
-                .TranslateTextAsync("pl", "en", query.Text)
+            var sourceLanguageCode = await _comprehendService
+                .GetDominantLanguageAsync(query.Text)
                 .ConfigureAwait(false);
 
-            return translatedText;
+
+            return await _translationService
+                .TranslateTextAsync(sourceLanguageCode, "en", query.Text)
+                .ConfigureAwait(false);
         }
     
         public class Validator : AbstractValidator<Query>

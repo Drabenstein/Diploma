@@ -14,7 +14,7 @@ namespace Infrastructure.AWS
             _amazonComprehendClient = amazonComprehendClient;
         }
 
-        public async Task<string?> GetDominantLanguageAsync(string text)
+        public async Task<string> GetDominantLanguageAsync(string text)
         {
             try
             {
@@ -24,7 +24,7 @@ namespace Infrastructure.AWS
                     .Languages
                     .OrderByDescending(x => x.Score)
                     .Select(x => x.LanguageCode)
-                    .FirstOrDefault();
+                    .FirstOrDefault()!;
             }
             catch (Exception ex)
             {
@@ -52,7 +52,7 @@ namespace Infrastructure.AWS
             try
             {
                 var request = new DetectSyntaxRequest { Text = text, LanguageCode = languageCode };
-                var response = await _amazonComprehendClient.DetectSyntaxAsync(request);
+                var response = await _amazonComprehendClient.DetectSyntaxAsync(request).ConfigureAwait(false);
                 return response.SyntaxTokens.Where(x => x.Text.Equals(word)).Count();
             }
             catch (Exception ex)

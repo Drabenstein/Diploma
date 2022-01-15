@@ -17,6 +17,7 @@ namespace Infrastructure.AWS
         {
             try
             {
+                throw new Exception();
                 var request = new TranslateTextRequest
                 {
                     Text = text,
