@@ -3,6 +3,7 @@ using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 using Application.Amazon;
 using Core.Amazon;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace Infrastructure.AWS
 {
@@ -37,8 +38,10 @@ namespace Infrastructure.AWS
             };
             try
             {
-                var fileResponse = await _amazonS3Client.GetObjectAsync(request).ConfigureAwait(false);
-                return fileResponse.ResponseStream;
+                var response = await _amazonS3Client.GetObjectAsync(request).ConfigureAwait(false);
+                new FileExtensionContentTypeProvider().TryGetContentType(response.Key, out var contentType);
+                if (!string.Equals(contentType, "application/pdf", StringComparison.Ordinal)) throw new AmazonException("Wrong thesis content type");
+                return response.ResponseStream;
             }
             catch (Exception ex)
             {

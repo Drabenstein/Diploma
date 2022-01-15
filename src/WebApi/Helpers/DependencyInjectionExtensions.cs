@@ -9,6 +9,8 @@ using Infrastructure.Database;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Application.Amazon;
+using Infrastructure.AWS;
 
 namespace WebApi.Helpers;
 
@@ -62,5 +64,13 @@ public static class DependencyInjectionExtensions
         services.AddScoped(_ => new AmazonS3Client(RegionEndpoint.USEast1));
         services.AddScoped(_ => new AmazonTranslateClient(RegionEndpoint.USEast1));
         services.AddScoped(_ => new AmazonComprehendClient(RegionEndpoint.USEast1));
+    }
+
+    public static void AddAmazonServices(this IServiceCollection services)
+    {
+        services.AddScoped<ITranslationService, TranslationService>();
+        services.AddScoped<IS3Service, S3Service>();
+        services.AddScoped<IComprehendService, ComprehendService>();
+
     }
 }
