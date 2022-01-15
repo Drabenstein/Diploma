@@ -405,27 +405,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("area_of_interest", (string)null);
                 });
 
-            modelBuilder.Entity("Core.Models.Users.Role", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasColumnName("role_id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id")
-                        .HasName("pk_role");
-
-                    b.ToTable("role", (string)null);
-                });
-
             modelBuilder.Entity("Core.Models.Users.StudentFieldOfStudy", b =>
                 {
                     b.Property<long>("StudentId")
@@ -503,25 +482,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("user", (string)null);
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("User");
-                });
-
-            modelBuilder.Entity("RoleUser", b =>
-                {
-                    b.Property<long>("RolesId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("roles_id");
-
-                    b.Property<long>("UsersId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("users_id");
-
-                    b.HasKey("RolesId", "UsersId")
-                        .HasName("pk_role_user");
-
-                    b.HasIndex("UsersId")
-                        .HasDatabaseName("ix_role_user_users_id");
-
-                    b.ToTable("role_user");
                 });
 
             modelBuilder.Entity("Core.Models.Users.Student", b =>
@@ -718,23 +678,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("FieldOfStudy");
 
                     b.Navigation("Student");
-                });
-
-            modelBuilder.Entity("RoleUser", b =>
-                {
-                    b.HasOne("Core.Models.Users.Role", null)
-                        .WithMany()
-                        .HasForeignKey("RolesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_role_user_role_roles_id");
-
-                    b.HasOne("Core.Models.Users.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_role_user_user_users_id");
                 });
 
             modelBuilder.Entity("Core.Models.Reviews.Review", b =>

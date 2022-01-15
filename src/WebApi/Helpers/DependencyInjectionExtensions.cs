@@ -25,6 +25,12 @@ public static class DependencyInjectionExtensions
         services.AddDbContext<DiplomaDbContext>(x => x.UseNpgsql(connectionString,
             b => b.MigrationsAssembly("Infrastructure")));
         services.AddScoped<ISqlConnectionFactory>(_ => new SqlConnectionFactory(connectionString));
+        services.AddScoped<DbContext, DiplomaDbContext>();
+    }
+
+    public static void AddCaching(this IServiceCollection services)
+    {
+        services.AddMemoryCache();
     }
 
     public static void AddHttpContextServices(this IServiceCollection services, IConfiguration configuration)

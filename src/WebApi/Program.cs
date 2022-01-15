@@ -1,5 +1,7 @@
 using Application.Common;
+using Infrastructure.Database;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using WebApi.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +11,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(typeof(PagedResultDto<>).Assembly);
 builder.Services.AddAmazonClients();
+builder.Services.AddCaching();
 
 string connectionString = builder.Configuration.GetConnectionString("DiplomaDb");
 builder.Services.AddDatabaseServices(connectionString);
