@@ -4,11 +4,15 @@ using Amazon.S3;
 using Amazon.Translate;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Application.ExternalServices;
+using Auth0.AuthenticationApi;
 using Core;
+using Infrastructure.Auth0;
 using Infrastructure.Database;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using HttpContextAccessor = WebApi.Services.HttpContextAccessor;
 using Application.Amazon;
 using Infrastructure.AWS;
 
@@ -23,40 +27,45 @@ public static class DependencyInjectionExtensions
         services.AddScoped<ISqlConnectionFactory>(_ => new SqlConnectionFactory(connectionString));
     }
 
+    public static void AddHttpContextServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddHttpContextAccessor();
+        services.AddScoped<IContextAccessor, HttpContextAccessor>();
+        services.AddScoped<IUserDataFetcher, Auth0UserDataFetcher>();
+        services.AddScoped<IAuthenticationApiClient>(_ => new AuthenticationApiClient(configuration["Auth0:Authority"]));
+    }
+    
     public static void AddAuth0Authentication(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddAuthentication(options =>
-        {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.Authority = configuration["Auth0:Authority"];
+                options.Audience = configuration["Auth0:Audience"];
 
-        }).AddJwtBearer(options =>
-        {
-            options.Authority = configuration["Auth0:Authority"];
-            options.Audience = configuration["Auth0:Audience"];
-            
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidIssuer = configuration["Auth0:ValidIssuer"],
-                ValidateAudience = true,
-                ValidateIssuer = true,
-            };
-            
-            options.Events = new JwtBearerEvents
-            {
-                OnTokenValidated = context =>
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    var accessToken = context.SecurityToken as JwtSecurityToken;
-                    if (accessToken is { })
-                    {
-                        ClaimsIdentity? identity = context.Principal?.Identity as ClaimsIdentity;
-                        identity?.AddClaim(new Claim(ClaimsConstants.AccessTokenClaimType, accessToken.RawData));
-                    }
+                    NameClaimType = ClaimTypes.NameIdentifier,
+                    ValidIssuer = configuration["Auth0:ValidIssuer"],
+                    ValidateAudience = true,
+                    ValidateIssuer = true,
+                    RoleClaimType = configuration[ClaimsConstants.RoleClaimType]
+                };
 
-                    return Task.CompletedTask;
-                }
-            };
-        });
+                options.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = context =>
+                    {
+                        if (context.SecurityToken is JwtSecurityToken accessToken)
+                        {
+                            var identity = context.Principal?.Identity as ClaimsIdentity;
+                            identity?.AddClaim(new Claim(ClaimsConstants.AccessTokenClaimType, accessToken.RawData));
+                        }
+
+                        return Task.CompletedTask;
+                    }
+                };
+            });
     }
 
     public static void AddAmazonClients(this IServiceCollection services)

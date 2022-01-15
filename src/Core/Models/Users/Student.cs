@@ -13,8 +13,8 @@ public record Student : User
     private readonly List<StudentFieldOfStudy> _studentFieldOfStudies;
     private readonly List<Thesis> _theses;
 
-    public Student(string firstName, string lastName, IEnumerable<Role> roles, int indexNumber) : base(
-        firstName, lastName, Email.CreateStudentEmail(indexNumber), roles)
+    public Student(string firstName, string lastName, string email, int indexNumber) : base(
+        firstName, lastName, new Email(email))
     {
         IndexNumber = indexNumber;
         _studentFieldOfStudies = new List<StudentFieldOfStudy>();

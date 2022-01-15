@@ -8,15 +8,18 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(typeof(PagedResultDto<>).Assembly);
-builder.Services.AddAuth0Authentication(builder.Configuration);
+builder.Services.AddAmazonClients();
+
 string connectionString = builder.Configuration.GetConnectionString("DiplomaDb");
 builder.Services.AddDatabaseServices(connectionString);
 builder.Services.AddAmazonClients();
 builder.Services.AddAmazonServices();
 
+builder.Services.AddHttpContextServices(builder.Configuration);
+builder.Services.AddAuth0Authentication(builder.Configuration);
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

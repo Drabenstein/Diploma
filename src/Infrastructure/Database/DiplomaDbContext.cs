@@ -2,6 +2,7 @@
 using Core.Models.Theses;
 using Core.Models.Topics;
 using Core.Models.Users;
+using Core.SeedWork;
 using Humanizer;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,7 +24,6 @@ public class DiplomaDbContext : DbContext
     public DbSet<Tutor> Tutors { get; set; }
     public DbSet<Student> Students { get; set; }
     public DbSet<AreaOfInterest> AreasOfInterests { get; set; }
-    public DbSet<Role> Roles { get; set; }
 
 #pragma warning disable CS8618
     public DiplomaDbContext() { }
@@ -59,5 +59,10 @@ public class DiplomaDbContext : DbContext
                 index.SetDatabaseName(index.GetDatabaseName().Underscore());
             }
         }
+    }
+
+    public Task CommitAsync()
+    {
+        return this.SaveChangesAsync();
     }
 }

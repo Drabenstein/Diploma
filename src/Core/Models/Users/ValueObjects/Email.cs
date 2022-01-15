@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace Core.Models.Users.ValueObjects;
 
-public record Email
+public record Email(string Address)
 {
     private const int RegexTimeoutSeconds = 2;
     private const string EmailRegexPattern = @"[a-zA-Z0-9-_.]+@[a-z0-9-]*\.?pwr\.edu\.pl";
@@ -11,18 +11,6 @@ public record Email
     private static readonly Regex EmailRegex = new Regex(EmailRegexPattern,
         RegexOptions.Compiled | RegexOptions.Multiline | RegexOptions.IgnoreCase,
         TimeSpan.FromSeconds(RegexTimeoutSeconds));
-
-    public Email(string address)
-    {
-        if (!EmailRegex.IsMatch(address))
-        {
-            throw new ArgumentException($"{address} is not a valid e-mail from pwr.edu.pl domain", nameof(address));
-        }
-
-        Address = address;
-    }
-
-    public string Address { get; }
 
     public static Email CreateStudentEmail(int indexNumber)
     {

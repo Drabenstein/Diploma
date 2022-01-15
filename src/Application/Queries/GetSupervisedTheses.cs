@@ -8,10 +8,11 @@ namespace Application.Queries;
 
 public static class GetSupervisedTheses
 {
-    public record Query(long TutorId) : IRequest<IEnumerable<FieldOfStudyInitialTableDto<SupervisedThesisDto>>>;
+    public record Query(string TutorEmail) : IRequest<IEnumerable<FieldOfStudyInitialTableDto<SupervisedThesisDto>>>;
 
     public class Handler : IRequestHandler<Query, IEnumerable<FieldOfStudyInitialTableDto<SupervisedThesisDto>>>
     {
+        private const string TutorIdQuery = "SELECT u.user_id FROM \"user\" u WHERE u.email = :TutorEmail";
         private const string SqlQuery = @"SELECT fos.field_of_study_id AS Id,
         fos.name AS Name,
         fos.degree AS Degree,
@@ -40,11 +41,17 @@ public static class GetSupervisedTheses
             CancellationToken cancellationToken)
         {
             using var connection = await _sqlConnectionFactory.CreateOpenConnectionAsync().ConfigureAwait(false);
+
+            var tutorId = await connection.QuerySingleAsync<long>(TutorIdQuery, new
+            {
+                request.TutorEmail
+            }).ConfigureAwait(false);
+            
             var initialTableDtos = await connection.QueryAsync<FieldOfStudyInitialTableDto<SupervisedThesisDto>>(
                 SqlQuery,
                 new
                 {
-                    request.TutorId
+                    TutorId = tutorId
                 }).ConfigureAwait(false);
 
             var fieldOfStudyInitialTableDtos = initialTableDtos as FieldOfStudyInitialTableDto<SupervisedThesisDto>[] ??
@@ -53,18 +60,18 @@ public static class GetSupervisedTheses
             foreach (var initialTableDto in fieldOfStudyInitialTableDtos)
             {
                 initialTableDto.Data = await _mediator
-                    .Send(CreateDataQuery(request.TutorId, initialTableDto.DefenceYear, initialTableDto.Id),
+                    .Send(CreateDataQuery(request.TutorEmail, initialTableDto.DefenceYear, initialTableDto.Id),
                         cancellationToken).ConfigureAwait(false);
             }
 
             return fieldOfStudyInitialTableDtos;
         }
 
-        private GetSupervisedThesesForYearOfDefenceAndField.Query CreateDataQuery(long tutorId, string defenceYear,
+        private GetSupervisedThesesForYearOfDefenceAndField.Query CreateDataQuery(string tutorEmail, string defenceYear,
             long fieldOfStudyId)
         {
             const long defaultPage = 0;
-            return new GetSupervisedThesesForYearOfDefenceAndField.Query(TutorId: tutorId,
+            return new GetSupervisedThesesForYearOfDefenceAndField.Query(TutorEmail: tutorEmail,
                 FieldOfStudyId: fieldOfStudyId, YearOfDefence: defenceYear, Page: defaultPage,
                 ItemsPerPage: DefaultItemsPerPage);
         }
@@ -74,7 +81,7 @@ public static class GetSupervisedTheses
     {
         public Validator()
         {
-            RuleFor(x => x.TutorId).GreaterThan(0);
+            RuleFor(x => x.TutorEmail).EmailAddress();
         }
     }
 }

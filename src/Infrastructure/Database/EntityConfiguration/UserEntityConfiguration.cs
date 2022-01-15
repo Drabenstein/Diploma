@@ -33,12 +33,6 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<User>
         builder.HasIndex(x => x.Email)
             .IsUnique();
 
-        builder.HasMany(x => x.Roles)
-            .WithMany(r => r.Users);
-
-        builder.Navigation(x => x.Roles)
-            .UsePropertyAccessMode(PropertyAccessMode.Field);
-        
         builder.HasMany(x => x.AreasOfInterest)
             .WithMany(x => x.Users);
 
