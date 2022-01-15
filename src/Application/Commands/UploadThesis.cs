@@ -3,13 +3,11 @@ using Core;
 using Dapper;
 using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Http;
-using System.Net.Http.Headers;
 
 namespace Application.Commands;
 public static class UploadThesis
 {
-    public record Command(int ThesisId, IFormFile File) : IRequest<Unit>;
+    public record Command(int ThesisId, byte[] File) : IRequest<Unit>;
 
     public class Handler : IRequestHandler<Command, Unit>
     {
@@ -22,16 +20,7 @@ public static class UploadThesis
         }
         public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
         {
-            var file = request.File;
-
-            var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName!.Trim('"');
-            var tempPath = Path.Combine(Path.GetTempPath(), fileName);
-            using (var stream = new FileStream(tempPath, FileMode.Create))
-            {
-                file.CopyTo(stream);
-            }
-
-            var fileContent = File.ReadAllBytes(tempPath);
+            var fileContent = request.File;
             var cloudKey = Guid.NewGuid().ToString();
 
             await _s3Service.UploadThesisAsync(Utils.BUCKET_KEY, cloudKey, fileContent).ConfigureAwait(false);
