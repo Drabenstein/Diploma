@@ -31,7 +31,8 @@ namespace WebApi.Controllers
             return File(thesisFileStream, "application/pdf");
         }
 
-        [HttpPost, DisableRequestSizeLimit]
+        [HttpPost]
+        [RequestSizeLimit(20_000_000)]
         [Route("uploadThesis")]
         public async Task<IActionResult> UploadThesis([FromQuery] int thesisId, CancellationToken cancellationToken)
         {
