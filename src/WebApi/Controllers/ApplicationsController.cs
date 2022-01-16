@@ -28,7 +28,8 @@ public class ApplicationsController : BaseApiController
     [HttpGet]
     [Route("initial-by-field")]
     [Authorize(Roles = Role.TutorRole)]
-    public Task<IEnumerable<FieldOfStudyInitialTableDto<ApplicationDto>>> GetApplicationsInitialTableAsync(CancellationToken cancellationToken)
+    public Task<IEnumerable<FieldOfStudyInitialTableDto<ApplicationDto>>> GetApplicationsInitialTableAsync(
+        CancellationToken cancellationToken)
     {
         string userEmail = GetUserEmail();
         return _mediator.Send(new GetApplications.Query(userEmail), cancellationToken);
@@ -73,7 +74,7 @@ public class ApplicationsController : BaseApiController
         var result = await _mediator.Send(new AcceptApplication.Command(email, applicationId), cancellationToken);
         return result ? Ok() : NotFound();
     }
-    
+
     /// <summary>
     /// Rejects specified application
     /// </summary>
@@ -91,7 +92,7 @@ public class ApplicationsController : BaseApiController
         var result = await _mediator.Send(new RejectApplication.Command(email, applicationId), cancellationToken);
         return result ? Ok() : NotFound();
     }
-    
+
     /// <summary>
     /// Confirms specified application
     /// </summary>
@@ -109,7 +110,7 @@ public class ApplicationsController : BaseApiController
         var result = await _mediator.Send(new AcceptApplication.Command(email, applicationId), cancellationToken);
         return result ? Ok() : NotFound();
     }
-    
+
     /// <summary>
     /// Cancels specified application
     /// </summary>
@@ -126,5 +127,24 @@ public class ApplicationsController : BaseApiController
         var email = GetUserEmail();
         var result = await _mediator.Send(new AcceptApplication.Command(email, applicationId), cancellationToken);
         return result ? Ok() : NotFound();
+    }
+
+    /// <summary>
+    /// Get details of application by id
+    /// </summary>
+    /// <param name="applicationId">Application id</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Found application details</returns>
+    /// <response code="200">Application found</response>
+    /// <response code="404">Application not found</response>
+    [HttpGet]
+    [Route("{applicationId}")]
+    [Authorize(Roles = "tutor,student")]
+    public async Task<IActionResult> GetDetailsAsync([FromRoute] long applicationId,
+        CancellationToken cancellationToken)
+    {
+        var email = GetUserEmail();
+        var result = await _mediator.Send(new GetApplicationDetailsById.Query(email, applicationId), cancellationToken);
+        return result is not null ? Ok(result) : NotFound();
     }
 }

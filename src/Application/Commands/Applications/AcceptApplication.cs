@@ -1,4 +1,5 @@
 ﻿using Core.Models.Topics;
+using Core.Models.Users;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

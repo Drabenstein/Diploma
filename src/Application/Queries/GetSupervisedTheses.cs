@@ -39,7 +39,7 @@ public static class GetSupervisedTheses
         {
             using var connection = await _sqlConnectionFactory.CreateOpenConnectionAsync().ConfigureAwait(false);
 
-            var tutorId = await connection.GetTutorIdByEmailAsync(request.TutorEmail).ConfigureAwait(false);
+            var tutorId = await connection.GetUserIdByEmailAsync(request.TutorEmail).ConfigureAwait(false);
             
             var initialTableDtos = await connection.QueryAsync<FieldOfStudyInitialTableDto<SupervisedThesisDto>>(
                 SqlQuery,

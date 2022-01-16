@@ -5,13 +5,13 @@ namespace Application.Common;
 
 public static class PagedQueryExtensions
 {
-    private const string TutorIdQuery = "SELECT u.user_id FROM \"user\" u WHERE u.email = :TutorEmail";
+    private const string TutorIdQuery = "SELECT u.user_id FROM \"user\" u WHERE u.email = :UserEmail";
 
-    public static Task<long> GetTutorIdByEmailAsync(this IDbConnection connection, string tutorEmail)
+    public static Task<long> GetUserIdByEmailAsync(this IDbConnection connection, string userEmail)
     {
         return connection.QuerySingleAsync<long>(TutorIdQuery, new
         {
-            TutorEmail = tutorEmail
+            UserEmail = userEmail
         });
     }
 

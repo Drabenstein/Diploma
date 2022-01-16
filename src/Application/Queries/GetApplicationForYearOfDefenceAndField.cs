@@ -36,7 +36,7 @@ public class GetApplicationForYearOfDefenceAndField
         public async Task<PagedResultDto<ApplicationDto>> Handle(Query request, CancellationToken cancellationToken)
         {
             using var connection = await _sqlConnectionFactory.CreateOpenConnectionAsync().ConfigureAwait(false);
-            var tutorId = await connection.GetTutorIdByEmailAsync(request.TutorEmail).ConfigureAwait(false);
+            var tutorId = await connection.GetUserIdByEmailAsync(request.TutorEmail).ConfigureAwait(false);
             
             var results =
                 await connection
