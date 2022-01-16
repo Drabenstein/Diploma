@@ -26,7 +26,7 @@ public class ThesesController : BaseApiController
     /// <response code="200">Returns found field of studies with paged supervised theses</response>
     [HttpGet]
     [Route("supervised-by-field")]
-    [Authorize(Roles = "tutor")]
+    [Authorize(Roles = Role.TutorRole)]
     public Task<IEnumerable<FieldOfStudyInitialTableDto<SupervisedThesisDto>>> GetSupervisedByFieldAsync(CancellationToken cancellationToken)
     {
         string userEmail = GetUserEmail();
@@ -45,7 +45,7 @@ public class ThesesController : BaseApiController
     /// <response code="200">Returns found paged supervised theses</response>
     [HttpGet]
     [Route("supervised")]
-    [Authorize(Roles = "tutor")]
+    [Authorize(Roles = Role.TutorRole)]
     public Task<PagedResultDto<SupervisedThesisDto>> GetSupervisedAsync(
         [FromQuery] long fieldOfStudyId, [FromQuery] string yearOfDefence, [FromQuery] int page = DefaultPage,
         [FromQuery] int pageSize = DefaultPageSize, CancellationToken cancellationToken = default)

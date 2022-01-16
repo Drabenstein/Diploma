@@ -2,7 +2,6 @@
 using Core.Models.Theses;
 using Core.Models.Topics;
 using Core.Models.Users;
-using Core.SeedWork;
 using Humanizer;
 using Microsoft.EntityFrameworkCore;
 
