@@ -15,7 +15,7 @@ public static class FetchUserData
 
     public class Handler : IRequestHandler<Command, bool>
     {
-        private const string CacheKeyBase = $"{nameof(FetchUserData)}-";
+        private const string CacheKeyBase = nameof(FetchUserData);
         private readonly IUserDataFetcher _userDataFetcher;
         private readonly DbContext _dbContext;
         private readonly IMemoryCache _cache;
@@ -29,7 +29,7 @@ public static class FetchUserData
 
         public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
         {
-            var cacheKey = $"{CacheKeyBase}{request.Email}";
+            var cacheKey = $"{CacheKeyBase}-{request.Email}";
             if (_cache.Get<UserDataDto?>(cacheKey) is not null)
             {
                 return false;
