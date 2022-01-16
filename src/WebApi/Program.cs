@@ -1,7 +1,3 @@
-using Application.Common;
-using Infrastructure.Database;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 using WebApi.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,7 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddMediatR(typeof(PagedResultDto<>).Assembly);
+builder.Services.AddCommandQueries();
 builder.Services.AddAmazonClients();
 builder.Services.AddCaching();
 

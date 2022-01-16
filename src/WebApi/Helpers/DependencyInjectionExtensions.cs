@@ -4,11 +4,14 @@ using Amazon.S3;
 using Amazon.Translate;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Application.Common;
 using Application.ExternalServices;
 using Auth0.AuthenticationApi;
 using Core;
+using FluentValidation;
 using Infrastructure.Auth0;
 using Infrastructure.Database;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -33,12 +36,19 @@ public static class DependencyInjectionExtensions
         services.AddMemoryCache();
     }
 
+    public static void AddCommandQueries(this IServiceCollection services)
+    {
+        services.AddMediatR(typeof(PagedResultDto<>).Assembly);
+        services.AddValidatorsFromAssembly(typeof(PagedResultDto<>).Assembly);
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+    }
+    
     public static void AddHttpContextServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddHttpContextAccessor();
         services.AddScoped<IContextAccessor, HttpContextAccessor>();
         services.AddScoped<IUserDataFetcher, Auth0UserDataFetcher>();
-        services.AddScoped<IAuthenticationApiClient>(_ => new AuthenticationApiClient(configuration["Auth0:Authority"]));
+        services.AddScoped<IAuthenticationApiClient>(_ => new AuthenticationApiClient(configuration["Auth0:Domain"]));
     }
     
     public static void AddAuth0Authentication(this IServiceCollection services, IConfiguration configuration)
@@ -55,7 +65,7 @@ public static class DependencyInjectionExtensions
                     ValidIssuer = configuration["Auth0:ValidIssuer"],
                     ValidateAudience = true,
                     ValidateIssuer = true,
-                    RoleClaimType = configuration[ClaimsConstants.RoleClaimType]
+                    RoleClaimType = ClaimsConstants.RoleClaimType
                 };
 
                 options.Events = new JwtBearerEvents

@@ -30,7 +30,7 @@ public static class FetchUserData
         public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
         {
             var cacheKey = $"{CacheKeyBase}{request.Email}";
-            if (_cache.Get<UserDataDto>(cacheKey) is not null)
+            if (_cache.Get<UserDataDto?>(cacheKey) is not null)
             {
                 return false;
             }

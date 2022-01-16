@@ -1,4 +1,5 @@
-﻿using Application.ExternalServices;
+﻿using System.Text.Json;
+using Application.ExternalServices;
 using Auth0.AuthenticationApi;
 
 namespace Infrastructure.Auth0;
@@ -19,6 +20,7 @@ public class Auth0UserDataFetcher : IUserDataFetcher
     {
         var userInfo = await _authenticationApiClient.GetUserInfoAsync(_contextAccessor.AccessToken)
             .ConfigureAwait(false);
-        return new UserDataDto(userInfo.FirstName, userInfo.LastName, userInfo.Email);
+        Console.WriteLine(JsonSerializer.Serialize(userInfo));
+        return new UserDataDto(userInfo.FirstName, userInfo.LastName, userInfo.FullName);
     }
 }

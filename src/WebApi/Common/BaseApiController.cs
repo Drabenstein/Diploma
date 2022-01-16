@@ -17,7 +17,7 @@ public abstract class BaseApiController : ControllerBase
 
     protected string GetUserEmail()
     {
-        return User.FindFirst(x =>
+        return User.Claims.First(x =>
                    string.Equals(x.Type, ClaimsConstants.EmailClaimType, StringComparison.OrdinalIgnoreCase))?.Value ??
                throw new Exception("Logged-in user e-mail not found");
     }
