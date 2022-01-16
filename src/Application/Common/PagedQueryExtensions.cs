@@ -7,12 +7,12 @@ public static class PagedQueryExtensions
 {
     private const string TutorIdQuery = "SELECT u.user_id FROM \"user\" u WHERE u.email = :UserEmail";
 
-    public static Task<long> GetUserIdByEmailAsync(this IDbConnection connection, string userEmail)
+    public static Task<long> GetUserIdByEmailAsync(this IDbConnection connection, string userEmail, IDbTransaction? transaction = null)
     {
         return connection.QuerySingleAsync<long>(TutorIdQuery, new
         {
             UserEmail = userEmail
-        });
+        }, transaction);
     }
 
     public static async Task<PagedResultDto<T>> GetPagedResultAsync<T>(this IEnumerable<T> results,

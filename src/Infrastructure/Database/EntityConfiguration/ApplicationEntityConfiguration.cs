@@ -32,7 +32,7 @@ public class ApplicationEntityConfiguration : IEntityTypeConfiguration<Core.Mode
             .IsRequired();
 
         builder.HasOne(x => x.Submitter)
-            .WithMany()
+            .WithMany(x => x.Applications)
             .IsRequired();
 
         builder.HasOne(x => x.Topic)

@@ -611,7 +611,7 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Core.Models.Topics.Application", b =>
                 {
                     b.HasOne("Core.Models.Users.Student", "Submitter")
-                        .WithMany()
+                        .WithMany("Applications")
                         .HasForeignKey("SubmitterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
@@ -704,6 +704,8 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Models.Users.Student", b =>
                 {
+                    b.Navigation("Applications");
+
                     b.Navigation("StudentFieldOfStudies");
 
                     b.Navigation("Theses");

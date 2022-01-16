@@ -42,7 +42,8 @@ public class ThesesController : BaseApiController
     /// <param name="pageSize">Count of items to return at max, default: 10</param>
     /// <param name="cancellationToken"></param>
     /// <returns>Paged result with supervised theses</returns>
-    /// <response code="200">Returns found paged supervised theses</response>
+    /// <response code="200">Found supervised theses</response>
+    /// <response code="422">Invalid parameters have been passed to request</response>
     [HttpGet]
     [Route("supervised")]
     [Authorize(Roles = Role.TutorRole)]

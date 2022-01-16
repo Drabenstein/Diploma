@@ -30,5 +30,11 @@ public class StudentEntityConfiguration : IEntityTypeConfiguration<Student>
 
         builder.Navigation(x => x.Theses)
             .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.HasMany(x => x.Applications)
+            .WithOne(x => x.Submitter);
+
+        builder.Navigation(x => x.Applications)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
     }
 }

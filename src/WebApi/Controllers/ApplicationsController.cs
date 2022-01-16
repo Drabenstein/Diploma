@@ -45,6 +45,8 @@ public class ApplicationsController : BaseApiController
     /// <param name="cancellationToken"></param>
     /// <returns>Paged result with applications</returns>
     /// <response code="200">Returns found paged applications</response>
+    /// <response code="409">Action cannot be permitted</response>
+    /// <response code="422">Validation of the request failed</response>
     [HttpGet]
     [Authorize(Roles = Role.TutorRole)]
     public Task<PagedResultDto<ApplicationDto>> GetSupervisedAsync(
@@ -65,6 +67,8 @@ public class ApplicationsController : BaseApiController
     /// <returns></returns>
     /// <response code="200">Application accepted successfully</response>
     /// <response code="404">Related topic not found or topic not supervised by logged-in user</response>
+    /// <response code="409">Action cannot be permitted</response>
+    /// <response code="422">Validation of the request failed</response>
     [HttpPost]
     [Route("{applicationId}/accept")]
     [Authorize(Roles = "tutor")]
@@ -83,6 +87,8 @@ public class ApplicationsController : BaseApiController
     /// <returns></returns>
     /// <response code="200">Application rejected successfully</response>
     /// <response code="404">Related topic not found or topic not supervised by logged-in user</response>
+    /// <response code="409">Action cannot be permitted</response>
+    /// <response code="422">Validation of the request failed</response>
     [HttpPost]
     [Route("{applicationId}/reject")]
     [Authorize(Roles = "tutor")]
@@ -101,6 +107,8 @@ public class ApplicationsController : BaseApiController
     /// <returns></returns>
     /// <response code="200">Application confirmed successfully</response>
     /// <response code="404">Related topic not found or application not submitted by logged-in user</response>
+    /// <response code="409">Action cannot be permitted</response>
+    /// <response code="422">Validation of the request failed</response>
     [HttpPost]
     [Route("{applicationId}/confirm")]
     [Authorize(Roles = "student")]
@@ -119,6 +127,8 @@ public class ApplicationsController : BaseApiController
     /// <returns></returns>
     /// <response code="200">Application cancelled successfully</response>
     /// <response code="404">Related topic not found or application not submitted by logged-in user</response>
+    /// <response code="409">Action cannot be permitted</response>
+    /// <response code="422">Validation of the request failed</response>
     [HttpPost]
     [Route("{applicationId}/cancel")]
     [Authorize(Roles = "student")]
@@ -137,6 +147,8 @@ public class ApplicationsController : BaseApiController
     /// <returns>Found application details</returns>
     /// <response code="200">Application found</response>
     /// <response code="404">Application not found</response>
+    /// <response code="409">Action cannot be permitted</response>
+    /// <response code="422">Validation of the request failed</response>
     [HttpGet]
     [Route("{applicationId}")]
     [Authorize(Roles = "tutor,student")]

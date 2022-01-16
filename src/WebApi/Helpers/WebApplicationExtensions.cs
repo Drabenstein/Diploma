@@ -20,6 +20,7 @@ namespace WebApi.Helpers
 
                 x.Map<AmazonException>().ToStatusCode(StatusCodes.Status400BadRequest);
                 x.Map<ValidationException>().ToStatusCode(StatusCodes.Status422UnprocessableEntity);
+                x.Map<InvalidOperationException>().ToStatusCode(StatusCodes.Status409Conflict);
             });
         }
     }

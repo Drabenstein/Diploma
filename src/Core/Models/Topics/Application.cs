@@ -7,7 +7,7 @@ namespace Core.Models.Topics;
 public record Application : EntityBase
 {
     public Student Submitter { get; set; }
-    public Topic? Topic { get; set; }
+    public Topic Topic { get; set; }
     public DateTime Timestamp { get; set; }
     public string Message { get; set; }
     public ApplicationStatus Status { get; private set; }
@@ -51,13 +51,14 @@ public record Application : EntityBase
     
     public void CancelApplication()
     {
-        if (Status == ApplicationStatus.Approved)
+        if (Status == ApplicationStatus.Confirmed)
+        {
+            throw new InvalidOperationException("Application cannot be cancelled if it is already confirmed");
+        }
+        
+        if (Status != ApplicationStatus.Rejected)
         {
             Status = ApplicationStatus.Cancelled;
-        }
-        else
-        {
-            throw new InvalidOperationException("Application can be only cancelled when it has status Approved");
         }
     }
 }
