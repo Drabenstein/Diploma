@@ -1,5 +1,4 @@
-﻿using Core.Models.Topics;
-using Infrastructure.Database.Utilities;
+﻿using Infrastructure.Database.Utilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -37,6 +36,6 @@ public class ApplicationEntityConfiguration : IEntityTypeConfiguration<Core.Mode
             .IsRequired();
 
         builder.HasOne(x => x.Topic)
-            .WithMany();
+            .WithMany(x => x.Applications);
     }
 }

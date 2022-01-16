@@ -1,4 +1,5 @@
-﻿using Application.Common;
+﻿using Application.Commands.Applications;
+using Application.Common;
 using Application.Queries;
 using Application.Queries.Dtos;
 using MediatR;
@@ -53,5 +54,77 @@ public class ApplicationsController : BaseApiController
         return _mediator.Send(
             new GetApplicationForYearOfDefenceAndField.Query(userEmail, fieldOfStudyId, yearOfDefence, page,
                 pageSize), cancellationToken);
+    }
+
+    /// <summary>
+    /// Accepts specified application
+    /// </summary>
+    /// <param name="applicationId">Application id</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">Application accepted successfully</response>
+    /// <response code="404">Related topic not found or topic not supervised by logged-in user</response>
+    [HttpPost]
+    [Route("{applicationId}/accept")]
+    [Authorize(Roles = "tutor")]
+    public async Task<IActionResult> AcceptAsync([FromRoute] long applicationId, CancellationToken cancellationToken)
+    {
+        var email = GetUserEmail();
+        var result = await _mediator.Send(new AcceptApplication.Command(email, applicationId), cancellationToken);
+        return result ? Ok() : NotFound();
+    }
+    
+    /// <summary>
+    /// Rejects specified application
+    /// </summary>
+    /// <param name="applicationId">Application id</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">Application rejected successfully</response>
+    /// <response code="404">Related topic not found or topic not supervised by logged-in user</response>
+    [HttpPost]
+    [Route("{applicationId}/reject")]
+    [Authorize(Roles = "tutor")]
+    public async Task<IActionResult> RejectAsync([FromRoute] long applicationId, CancellationToken cancellationToken)
+    {
+        var email = GetUserEmail();
+        var result = await _mediator.Send(new RejectApplication.Command(email, applicationId), cancellationToken);
+        return result ? Ok() : NotFound();
+    }
+    
+    /// <summary>
+    /// Confirms specified application
+    /// </summary>
+    /// <param name="applicationId">Application id</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">Application confirmed successfully</response>
+    /// <response code="404">Related topic not found or application not submitted by logged-in user</response>
+    [HttpPost]
+    [Route("{applicationId}/confirm")]
+    [Authorize(Roles = "student")]
+    public async Task<IActionResult> ConfirmAsync([FromRoute] long applicationId, CancellationToken cancellationToken)
+    {
+        var email = GetUserEmail();
+        var result = await _mediator.Send(new AcceptApplication.Command(email, applicationId), cancellationToken);
+        return result ? Ok() : NotFound();
+    }
+    
+    /// <summary>
+    /// Cancels specified application
+    /// </summary>
+    /// <param name="applicationId">Application id</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200">Application cancelled successfully</response>
+    /// <response code="404">Related topic not found or application not submitted by logged-in user</response>
+    [HttpPost]
+    [Route("{applicationId}/cancel")]
+    [Authorize(Roles = "student")]
+    public async Task<IActionResult> CancelAsync([FromRoute] long applicationId, CancellationToken cancellationToken)
+    {
+        var email = GetUserEmail();
+        var result = await _mediator.Send(new AcceptApplication.Command(email, applicationId), cancellationToken);
+        return result ? Ok() : NotFound();
     }
 }

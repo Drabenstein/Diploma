@@ -173,12 +173,10 @@ namespace Infrastructure.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("CloudBucket")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("cloud_bucket");
 
                     b.Property<string>("CloudKey")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("cloud_key");
 
@@ -612,7 +610,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Models.Topics.Application", b =>
                 {
-                    b.HasOne("Core.Models.Users.User", "Submitter")
+                    b.HasOne("Core.Models.Users.Student", "Submitter")
                         .WithMany()
                         .HasForeignKey("SubmitterId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -620,7 +618,7 @@ namespace Infrastructure.Migrations
                         .HasConstraintName("fk_application_user_submitter_id");
 
                     b.HasOne("Core.Models.Topics.Topic", "Topic")
-                        .WithMany()
+                        .WithMany("Applications")
                         .HasForeignKey("TopicId")
                         .HasConstraintName("fk_application_topic_topic_id");
 
@@ -699,6 +697,8 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Core.Models.Topics.Topic", b =>
                 {
+                    b.Navigation("Applications");
+
                     b.Navigation("Theses");
                 });
 
