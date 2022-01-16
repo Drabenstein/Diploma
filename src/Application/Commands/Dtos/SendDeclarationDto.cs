@@ -6,5 +6,6 @@ public class SendDeclarationDto
     public string ObjectiveOfWork { get; set; }
     public string OperatingRange { get; set; }
     public string Language { get; set; }
+    public bool HasConsentToChangeLanguage { get; set; }
     public DateTime DeclarationDateTime { get; set; }
 }

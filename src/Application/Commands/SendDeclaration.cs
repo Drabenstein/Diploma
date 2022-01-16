@@ -23,6 +23,8 @@ public static class SendDeclaration
                 VALUES (:ObjectiveOfWork, :OperatingRange, :Language, :Date, :ThesisId)
                 ";
 
+        private const string UpdateThesisCommand = "UPDATE thesis SET (language, has_consent_to_change_language)  = (:Language, :HasConsentToChangeLanguage) WHERE thesis_id = :ThesisId";
+
         public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
         {
             using var connection = await _sqlConnectionFactory.CreateOpenConnectionAsync().ConfigureAwait(false);
@@ -35,6 +37,13 @@ public static class SendDeclaration
                 OperatingRange = request.declarationDto.OperatingRange,
                 Language = request.declarationDto.Language,
                 Date = date,
+                ThesisId = request.declarationDto.ThesisId
+            }).ConfigureAwait(false);
+
+            await connection.ExecuteAsync(UpdateThesisCommand, new
+            {
+                Language = request.declarationDto.Language,
+                HasConsentToChangeLanguage = request.declarationDto.HasConsentToChangeLanguage,
                 ThesisId = request.declarationDto.ThesisId
             }).ConfigureAwait(false);
 
