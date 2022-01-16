@@ -1,6 +1,4 @@
-﻿using Application.Common;
-
-namespace Application.Queries.Dtos;
+﻿namespace Application.Queries.Dtos;
 
 public class ReviewerWithInterestsDto
 {

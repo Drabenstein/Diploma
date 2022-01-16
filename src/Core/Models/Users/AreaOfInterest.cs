@@ -9,4 +9,15 @@ public record AreaOfInterest : EntityBase
     public string Name { get; init; }
 
     public virtual IReadOnlyCollection<User> Users => _users.AsReadOnly();
+
+    public void RemoveUser(User user)
+    {
+        _users.Remove(user);
+    }
+
+    public void AddUser(User user)
+    {
+        _users.Add(user);
+    }
+
 }

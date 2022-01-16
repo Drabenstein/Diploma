@@ -40,19 +40,4 @@ public class ReviewersController : BaseApiController
     {
         return _mediator.Send(new GetReviewersWithInterests.Query(minNoReviews, maxNoReviews, AreaOfInterestIds, page, pageSize), cancellationToken);
     }
-
-    /// <summary>
-    /// Returns a collection of Areas of interest
-    /// </summary>
-    /// <param name="cancellationToken"></param>
-    /// <returns>Collection of employees' Areas of interest</returns>
-    /// <response code="200"></response>
-    [HttpGet]
-    [Route("getInterestsForReviewers")]
-    [Authorize(Roles = Role.DeansAssistantRole)]
-    public Task<IEnumerable<AreaOfInterestDto>> GetAllAreasOfInterest(CancellationToken cancellationToken)
-    {
-        return _mediator.Send(new GetAllAreasOfInterest.Query(), cancellationToken);
-    }
-
 }

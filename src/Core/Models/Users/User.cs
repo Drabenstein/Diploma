@@ -24,4 +24,16 @@ public record User : EntityBase
     public string LastName { get; set; }
     public Email Email { get; set; }
     public virtual IReadOnlyCollection<AreaOfInterest> AreasOfInterest => _areasOfInterest.AsReadOnly();
+
+    public void RemoveAreaOfInterest(AreaOfInterest area)
+    {
+        _areasOfInterest.Remove(area);
+        area.RemoveUser(this);
+    }
+
+    public void AddAreaOfInterest(AreaOfInterest area)
+    {
+        _areasOfInterest.Add(area);
+        area.AddUser(this);
+    }
 }
