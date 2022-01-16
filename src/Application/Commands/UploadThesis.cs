@@ -9,9 +9,9 @@ using System.Net.Http.Headers;
 namespace Application.Commands;
 public static class UploadThesis
 {
-    public record Command(int ThesisId, IFormFile File) : IRequest<int>;
+    public record Command(int ThesisId, IFormFile File) : IRequest<Unit>;
 
-    public class Handler : IRequestHandler<Command, int>
+    public class Handler : IRequestHandler<Command, Unit>
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
         private readonly IS3Service _s3Service;
@@ -20,7 +20,7 @@ public static class UploadThesis
             _sqlConnectionFactory = sqlConnectionFactory;
             _s3Service = s3Service;
         }
-        public async Task<int> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
         {
             var file = request.File;
 
@@ -44,9 +44,10 @@ public static class UploadThesis
                 WHERE thesis_id = {request.ThesisId}
             ";
 
-            var rowsAffected = await connection.ExecuteAsync(UploadThesisCommand).ConfigureAwait(false);
-            return rowsAffected;
+            await connection.ExecuteAsync(UploadThesisCommand).ConfigureAwait(false);
+            return new Unit();
         }
+
     }
 
     public class Validator : AbstractValidator<Command>

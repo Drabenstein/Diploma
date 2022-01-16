@@ -4,8 +4,6 @@ using Core;
 using Dapper;
 using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Http;
-using System.Net.Http.Headers;
 
 namespace Application.Commands;
 public static class DeleteThesis
@@ -16,6 +14,18 @@ public static class DeleteThesis
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
         private readonly IS3Service _s3Service;
+
+        private const string GetCredentialsQuery = @" SELECT cloud_bucket AS Bucket, cloud_key AS Key
+                    FROM thesis
+                    WHERE thesis_id = :ThesisId
+            ";
+
+        private const string RemoveThesisCommand =
+            @"UPDATE thesis
+                SET (cloud_key, cloud_bucket) = (NULL, NULL)
+                WHERE thesis_id = :ThesisId
+            ";
+
         public Handler(ISqlConnectionFactory sqlConnectionFactory, IS3Service s3Service)
         {
             _sqlConnectionFactory = sqlConnectionFactory;
@@ -24,11 +34,6 @@ public static class DeleteThesis
         public async Task<int> Handle(Command request, CancellationToken cancellationToken)
         {
             using var connection = await _sqlConnectionFactory.CreateOpenConnectionAsync().ConfigureAwait(false);
-
-            string GetCredentialsQuery = @" SELECT cloud_bucket AS Bucket, cloud_key AS Key
-                    FROM thesis
-                    WHERE thesis_id = : ThesisId
-            ";
 
             var credentials = await connection
                 .QuerySingleAsync<ThesisCloudCredentialsDto>(GetCredentialsQuery, new
@@ -40,14 +45,7 @@ public static class DeleteThesis
 
             await _s3Service.RemoveThesisAsync(Utils.BUCKET_KEY, cloudKey).ConfigureAwait(false);
 
-
-            string RemoveThesisCommand =
-            @$"UPDATE thesis
-                SET (cloud_key, cloud_bucket) = (NULL, NULL)
-                WHERE thesis_id = {request.ThesisId}
-            ";
-
-            var rowsAffected = await connection.ExecuteAsync(RemoveThesisCommand).ConfigureAwait(false);
+            var rowsAffected = await connection.ExecuteAsync(RemoveThesisCommand, new { request.ThesisId }).ConfigureAwait(false);
             return rowsAffected;
         }
     }

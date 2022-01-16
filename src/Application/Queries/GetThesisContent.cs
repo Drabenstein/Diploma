@@ -1,6 +1,5 @@
 ﻿using Application.Amazon;
 using Application.Common;
-using Application.Queries.Dtos;
 using Core;
 using Dapper;
 using FluentValidation;
@@ -19,7 +18,7 @@ public static class GetThesisContent
         private const string CloudCredentialsQuery =
             @" SELECT cloud_bucket AS Bucket, cloud_key AS Key
                     FROM thesis
-                    WHERE thesis_id = : ThesisId
+                    WHERE thesis_id = :ThesisId
             ";
         public Handler(IS3Service s3Service, ISqlConnectionFactory sqlConnectionFactory)
         {
