@@ -26,7 +26,7 @@ public class ApplicationsController : BaseApiController
     /// <response code="200">Returns found field of studies with paged applications</response>
     [HttpGet]
     [Route("initial-by-field")]
-    [Authorize(Roles = "tutor")]
+    [Authorize(Roles = Role.TutorRole)]
     public Task<IEnumerable<FieldOfStudyInitialTableDto<ApplicationDto>>> GetApplicationsInitialTableAsync(CancellationToken cancellationToken)
     {
         string userEmail = GetUserEmail();
@@ -44,7 +44,7 @@ public class ApplicationsController : BaseApiController
     /// <returns>Paged result with applications</returns>
     /// <response code="200">Returns found paged applications</response>
     [HttpGet]
-    [Authorize(Roles = "tutor")]
+    [Authorize(Roles = Role.TutorRole)]
     public Task<PagedResultDto<ApplicationDto>> GetSupervisedAsync(
         [FromQuery] long fieldOfStudyId, [FromQuery] string yearOfDefence, [FromQuery] int page = DefaultPage,
         [FromQuery] int pageSize = DefaultPageSize, CancellationToken cancellationToken = default)

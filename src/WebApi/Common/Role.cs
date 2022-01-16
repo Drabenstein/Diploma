@@ -4,5 +4,6 @@
     {
         public const string StudentRole = "student";
         public const string TutorRole = "tutor";
+        public const string DeansAssistantRole = "deans-assistant"
     }
 }
