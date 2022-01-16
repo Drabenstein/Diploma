@@ -7,6 +7,9 @@ namespace WebApi.Common;
 [ApiController]
 public abstract class BaseApiController : ControllerBase
 {
+    protected const int DefaultPage = 1;
+    protected const int DefaultPageSize = 10;
+    
     protected IReadOnlyCollection<string> GetUserRoles()
     {
         return User.Claims

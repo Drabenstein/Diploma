@@ -9,50 +9,49 @@ using WebApi.Common;
 namespace WebApi.Controllers;
 
 [ApiController]
-[Route("api/theses")]
-public class ThesesController : BaseApiController
+[Route("/api/applications")]
+public class ApplicationsController : BaseApiController
 {
     private readonly IMediator _mediator;
 
-    public ThesesController(IMediator mediator)
+    public ApplicationsController(IMediator mediator)
     {
         _mediator = mediator;
     }
 
     /// <summary>
-    /// Returns all field of studies where user supervises at least one thesis with initial number of theses
+    /// Returns all field of studies where user has open applications
     /// </summary>
-    /// <returns>Field of studies with paged supervised theses</returns>
-    /// <response code="200">Returns found field of studies with paged supervised theses</response>
+    /// <returns>Field of studies with paged applications</returns>
+    /// <response code="200">Returns found field of studies with paged applications</response>
     [HttpGet]
-    [Route("supervised-by-field")]
+    [Route("initial-by-field")]
     [Authorize(Roles = "tutor")]
-    public Task<IEnumerable<FieldOfStudyInitialTableDto<SupervisedThesisDto>>> GetSupervisedByFieldAsync(CancellationToken cancellationToken)
+    public Task<IEnumerable<FieldOfStudyInitialTableDto<ApplicationDto>>> GetApplicationsInitialTableAsync(CancellationToken cancellationToken)
     {
         string userEmail = GetUserEmail();
-        return _mediator.Send(new GetSupervisedTheses.Query(userEmail), cancellationToken);
+        return _mediator.Send(new GetApplications.Query(userEmail), cancellationToken);
     }
 
     /// <summary>
-    /// Returns requested page of supervised theses
+    /// Returns requested page of applications
     /// </summary>
     /// <param name="fieldOfStudyId">Field of study id</param>
     /// <param name="yearOfDefence">Year of defence of the theses</param>
     /// <param name="page">Request result page, default: 1</param>
     /// <param name="pageSize">Count of items to return at max, default: 10</param>
     /// <param name="cancellationToken"></param>
-    /// <returns>Paged result with supervised theses</returns>
-    /// <response code="200">Returns found paged supervised theses</response>
+    /// <returns>Paged result with applications</returns>
+    /// <response code="200">Returns found paged applications</response>
     [HttpGet]
-    [Route("supervised")]
     [Authorize(Roles = "tutor")]
-    public Task<PagedResultDto<SupervisedThesisDto>> GetSupervisedAsync(
+    public Task<PagedResultDto<ApplicationDto>> GetSupervisedAsync(
         [FromQuery] long fieldOfStudyId, [FromQuery] string yearOfDefence, [FromQuery] int page = DefaultPage,
         [FromQuery] int pageSize = DefaultPageSize, CancellationToken cancellationToken = default)
     {
         string userEmail = GetUserEmail();
         return _mediator.Send(
-            new GetSupervisedThesesForYearOfDefenceAndField.Query(userEmail, fieldOfStudyId, yearOfDefence, page,
+            new GetApplicationForYearOfDefenceAndField.Query(userEmail, fieldOfStudyId, yearOfDefence, page,
                 pageSize), cancellationToken);
     }
 }
