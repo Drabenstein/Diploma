@@ -29,7 +29,8 @@ public class TopicsController : BaseApiController
     /// <response code="200">Returns all topics grouped by field of study and year of defence</response>
     [HttpGet]
     [Authorize(Roles = Role.StudentRole + "," + Role.TutorRole)]
-    public Task<IEnumerable<FieldOfStudyInitialTableDto<StudentsTopicDto>>> GetAllTopicsAsync(CancellationToken cancellationToken)
+    public Task<IEnumerable<FieldOfStudyInitialTableDto<StudentsTopicDto>>> GetAllTopicsAsync(
+        CancellationToken cancellationToken)
     {
         return _mediator.Send(new GetAllTopics.Query(), cancellationToken);
     }
@@ -43,7 +44,8 @@ public class TopicsController : BaseApiController
     [HttpGet]
     [Route("topicsForTutor")]
     [Authorize(Roles = Role.TutorRole)]
-    public Task<IEnumerable<FieldOfStudyInitialTableDto<TutorsTopicDto>>> GetTutorsTopics(CancellationToken cancellationToken)
+    public Task<IEnumerable<FieldOfStudyInitialTableDto<TutorsTopicDto>>> GetTutorsTopics(
+        CancellationToken cancellationToken)
     {
         string email = GetUserEmail();
         return _mediator.Send(new GetAllTopicsForTutor.Query(email), cancellationToken);
@@ -70,7 +72,6 @@ public class TopicsController : BaseApiController
             new GetAllTopicsForFieldOfStudyAndYear.Query(fieldOfStudyId, yearOfDefence, page,
                 pageSize), cancellationToken);
     }
-
 
     /// <summary>
     /// Returns requested page of topics for tutor
@@ -113,7 +114,9 @@ public class TopicsController : BaseApiController
         [FromQuery] string Message, CancellationToken cancellationToken)
     {
         string email = GetUserEmail();
-        return _mediator.Send(new ProposeTopic.Command(email, TutorId, FieldOfStudyId, MaxRealizationNumber, PolishName, EnglishName, Message), cancellationToken);
+        return _mediator.Send(
+            new ProposeTopic.Command(email, TutorId, FieldOfStudyId, MaxRealizationNumber, PolishName, EnglishName,
+                Message), cancellationToken);
     }
 
     /// <summary>
@@ -137,7 +140,8 @@ public class TopicsController : BaseApiController
     [HttpGet]
     [Route("possibleFieldsOfStudy")]
     [Authorize(Roles = Role.StudentRole)]
-    public Task<IEnumerable<FieldOfStudyForApplicationDto>> GetFieldsOfStudyForApplication(CancellationToken cancellationToken)
+    public Task<IEnumerable<FieldOfStudyForApplicationDto>> GetFieldsOfStudyForApplication(
+        CancellationToken cancellationToken)
     {
         string email = GetUserEmail();
         return _mediator.Send(new GetFieldsOfStudyForApplication.Query(email), cancellationToken);
@@ -176,6 +180,42 @@ public class TopicsController : BaseApiController
             dto.MaxNoRealizations, dto.PolishName, dto.EnglishName), cancellationToken);
     }
 
+    /// <summary>
+    /// Returns all field of studies with paged topics which were not considered
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("for-consideration-initial")]
+    [Authorize(Roles = Role.ProgramCommittee)]
+    [ProducesResponseType(typeof(IEnumerable<FieldOfStudyInitialTableDto<TopicForConsiderationDto>>),
+        StatusCodes.Status200OK)]
+    public Task<IEnumerable<FieldOfStudyInitialTableDto<TopicForConsiderationDto>>>
+        GetTopicsForConsiderationInitialAsync(CancellationToken cancellationToken)
+    {
+        return _mediator.Send(new GetTopicsForConsideration.Query(), cancellationToken);
+    }
 
+    /// <summary>
+    /// Gets unconsidered topics page for field of study and year of defence
+    /// </summary>
+    /// <param name="fieldOfStudyId">Field of study id</param>
+    /// <param name="yearOfDefence">Year of defence</param>
+    /// <param name="page">Requested page</param>
+    /// <param name="pageSize">Max items to return per page</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("for-consideration")]
+    [Authorize(Roles = Role.ProgramCommittee)]
+    [ProducesResponseType(typeof(PagedResultDto<TopicForConsiderationDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    public Task<PagedResultDto<TopicForConsiderationDto>> GetTopicsForConsiderationAsync(
+        [FromQuery] long fieldOfStudyId, [FromQuery] string yearOfDefence, [FromQuery] int page = DefaultPage,
+        [FromQuery] int pageSize = DefaultPageSize, CancellationToken cancellationToken = default)
+    {
+        return _mediator.Send(
+            new GetTopicsForConsiderationByYearOfDefenceAndField.Query(fieldOfStudyId, yearOfDefence, page, pageSize),
+            cancellationToken);
+    }
 }
-
