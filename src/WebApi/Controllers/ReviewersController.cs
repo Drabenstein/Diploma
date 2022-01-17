@@ -80,4 +80,20 @@ public class ReviewersController : BaseApiController
                 pageSize), cancellationToken);
     }
 
+    /// <summary>
+    /// Returns initial data for review
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <param name="ThesisId">Id of thesis to review</param>
+    /// <returns>DTO with initial data for review</returns>
+    /// <response code="200">Returns DTO with initial data for review</response>
+    [HttpGet]
+    [Route("getDataForReview")]
+    [Authorize(Roles = Role.TutorRole)]
+    public Task<ReviewDataDto> GetDataForReview([FromQuery] long ThesisId, CancellationToken cancellationToken)
+    {
+        string userEmail = GetUserEmail();
+        return _mediator.Send(new GetDataForReview.Query(userEmail, ThesisId), cancellationToken);
+    }
+
 }
