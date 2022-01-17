@@ -20,7 +20,7 @@ public static class GetAllTopicsForFieldOfStudyAndYear
                 "from topic as t join \"user\" as supervisor on t.supervisor_id = supervisor.user_id" +
                 @"join thesis as the on t.topic_id = the.topic_id
                 join review as rev on rev.thesis_id = the.thesis_id" +
-                "join \"user\" as reviewer on reviewer.user_id = rev.reviewer_id where reviewer.user_id != supervisor.user_id and t.year_of_defence = :YearOfDefence and t.field_of_study_id = :FieldOfStudyId 	ORDER BY t.is_free desc, t.topic_id DESC OFFSET :OffsetRows ROWS FETCH NEXT :ItemsPerPage ROWS ONLY";
+                "join \"user\" as reviewer on reviewer.user_id = rev.reviewer_id where reviewer.user_id != supervisor.user_id and t.year_of_defence = :YearOfDefence and t.field_of_study_id = :FieldOfStudyId 	ORDER BY supervisor.last_name asc, supervisor.first_name asc OFFSET :OffsetRows ROWS FETCH NEXT :ItemsPerPage ROWS ONLY";
 
         private const string SqlCountQuery = @"SELECT COUNT(*)" +
              "from topic as t join \"user\" as supervisor on t.supervisor_id = supervisor.user_id" +

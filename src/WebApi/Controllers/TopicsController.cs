@@ -159,6 +159,23 @@ public class TopicsController : BaseApiController
         return _mediator.Send(new ApplyForTopic.Command(email, TopicId, Message), cancellationToken);
     }
 
+    /// <summary>
+    /// Creates a new topic
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <param name="dto">DTO with topic's name in en and pl, max number of realizations,
+    /// year of defence and field of study</param>
+    /// <response code="200">Topic was added</response>
+    [HttpPost]
+    [Route("createTopic")]
+    [Authorize(Roles = Role.TutorRole)]
+    public Task CreateTopic([FromBody] CreateTopicDto dto, CancellationToken cancellationToken)
+    {
+        string email = GetUserEmail();
+        return _mediator.Send(new CreateTopic.Command(email, dto.FieldOfStudyId, dto.YearOfDefence,
+            dto.MaxNoRealizations, dto.PolishName, dto.EnglishName), cancellationToken);
+    }
+
 
 }
 

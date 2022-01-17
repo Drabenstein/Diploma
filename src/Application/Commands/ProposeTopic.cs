@@ -5,7 +5,6 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Commands;
-//WIP
 public static class ProposeTopic
 {
     public record Command(string UserEmail, long TutorId, long FieldOfStudyId, int MaxRealizationNumber, string PolishName, string EnglishName, string Message) : IRequest<Unit>;
@@ -23,9 +22,9 @@ public static class ProposeTopic
         {
             var user = _dbContext.Set<Student>().FirstOrDefault(x => x.Email.Address == request.UserEmail);
 
-            var fieldOfStudy = _dbContext.Set<FieldOfStudy>().FirstOrDefault(x => x.Id == request.FieldOfStudyId);
+            var fieldOfStudy = await _dbContext.Set<FieldOfStudy>().FirstOrDefaultAsync(x => x.Id == request.FieldOfStudyId).ConfigureAwait(false);
 
-            var studentFieldOfStudy = _dbContext.Set<StudentFieldOfStudy>().FirstOrDefault(x => x.StudentId == user.Id && x.FieldOfStudyId == fieldOfStudy.Id);
+            var studentFieldOfStudy = await _dbContext.Set<StudentFieldOfStudy>().FirstOrDefaultAsync(x => x.StudentId == user.Id && x.FieldOfStudyId == fieldOfStudy.Id).ConfigureAwait(false);
 
             if (user == null || fieldOfStudy == null || studentFieldOfStudy == null) throw new InvalidOperationException("Application cannot be created with given data");
 
@@ -34,7 +33,7 @@ public static class ProposeTopic
                 Proposer = user,
                 IsProposedByStudent = true,
                 MaxRealizationNumber = request.MaxRealizationNumber,
-                IsAccepted = false,
+                IsAccepted = null,
                 FieldOfStudy = fieldOfStudy,
                 Name = request.PolishName,
                 EnglishName = request.EnglishName,

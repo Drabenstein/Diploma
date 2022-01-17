@@ -19,7 +19,7 @@ public static class GetAllTopicsForTutorForFieldOfStudyAndYear
                 "from topic as t join \"user\" as supervisor on t.supervisor_id = supervisor.user_id" +
                 @"join thesis as the on t.topic_id = the.topic_id
                 join review as rev on rev.thesis_id = the.thesis_id" +
-                "join \"user\" as reviewer on reviewer.user_id = rev.reviewer_id join \"user\" as realizer on realizer.user_id = the.realizer_student_id where reviewer.user_id != supervisor.user_id and t.year_of_defence = :YearOfDefence and t.field_of_study_id = :FieldOfStudyId and t.supervisor_id = :TutorId    ORDER BY t.is_free desc, t.topic_id DESC OFFSET :OffsetRows ROWS FETCH NEXT :ItemsPerPage ROWS ONLY";
+                "join \"user\" as reviewer on reviewer.user_id = rev.reviewer_id join \"user\" as realizer on realizer.user_id = the.realizer_student_id where reviewer.user_id != supervisor.user_id and t.year_of_defence = :YearOfDefence and t.field_of_study_id = :FieldOfStudyId and t.supervisor_id = :TutorId    ORDER BY realizer.last_name asc, realizer.first_name asc OFFSET :OffsetRows ROWS FETCH NEXT :ItemsPerPage ROWS ONLY";
 
         private const string SqlCountQuery = @"SELECT COUNT(*)" +
              "from topic as t join \"user\" as supervisor on t.supervisor_id = supervisor.user_id" +

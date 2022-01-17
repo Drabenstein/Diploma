@@ -7,7 +7,7 @@ using MediatR;
 
 namespace Application.Queries;
 
-public class GetApplicationForYearOfDefenceAndField
+public static class GetApplicationForYearOfDefenceAndField
 {
     public record Query
         (string TutorEmail, long FieldOfStudyId, string YearOfDefence, int Page, int ItemsPerPage) : IRequest<PagedResultDto<ApplicationDto>>;
