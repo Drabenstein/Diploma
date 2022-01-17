@@ -177,5 +177,21 @@ public class TopicsController : BaseApiController
     }
 
 
+    /// <summary>
+    /// Returns student's approved topics
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns>A DTO with topic and application ids, topic name in pl and en, supervisor data and approved status</returns>
+    /// <response code="200">Student's approved topics</response>
+    [HttpGet]
+    [Route("myAcceptedTopics")]
+    [Authorize(Roles = Role.StudentRole)]
+    public Task<IEnumerable<ApprovedTopicDto>> GetMyApprovedTopics(CancellationToken cancellationToken)
+    {
+        string email = GetUserEmail();
+        return _mediator.Send(new GetMyApprovedTopics.Query(email), cancellationToken);
+    }
+
+
 }
 

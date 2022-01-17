@@ -47,8 +47,6 @@ public class ThesesController : BaseApiController
         return _mediator.Send(new GetMyThesis.Query(userEmail, ThesisId), cancellationToken);
     }
 
-
-
     /// <summary>
     /// Returns all field of studies where user supervises at least one thesis with initial number of theses
     /// </summary>
