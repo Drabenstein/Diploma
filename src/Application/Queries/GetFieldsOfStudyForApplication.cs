@@ -27,6 +27,7 @@ public static class GetFieldsOfStudyForApplication
 
             return await _dbContext.Set<FieldOfStudy>()
                 .Where(x => x.StudentFieldsOfStudy.Select(y => y.StudentId).Contains(user.Id))
+                .OrderBy(x => x.Name)
                 .Select(x => new FieldOfStudyForApplicationDto
                     {
                         Id = x.Id,
