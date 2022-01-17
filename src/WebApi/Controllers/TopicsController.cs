@@ -33,20 +33,21 @@ public class TopicsController : BaseApiController
     {
         return _mediator.Send(new GetAllTopics.Query(), cancellationToken);
     }
-    //WIP
-    ///// <summary>
-    ///// Returns all topics grouped by field of study and year of defence
-    ///// </summary>
-    ///// <param name="cancellationToken"></param>
-    ///// <returns>All topics grouped by field of study and year of defence</returns>
-    ///// <response code="200">Returns all topics grouped by field of study and year of defence</response>
-    //[HttpGet]
-    //[Authorize(Roles = Role.StudentRole + "," + Role.TutorRole)]
-    //public Task<IEnumerable<FieldOfStudyInitialTableDto<StudentsTopicDto>>> GetTutorsTopics(CancellationToken cancellationToken)
-    //{
-    //    string email = GetUserEmail();
-    //    return _mediator.Send(new GetAllTopicsForTutor.Query(email), cancellationToken);
-    //}
+
+    /// <summary>
+    /// Returns all topics grouped by field of study and year of defence
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns>All topics grouped by field of study and year of defence</returns>
+    /// <response code="200">Returns all topics grouped by field of study and year of defence</response>
+    [HttpGet]
+    [Route("topicsForTutor")]
+    [Authorize(Roles = Role.TutorRole)]
+    public Task<IEnumerable<FieldOfStudyInitialTableDto<TutorsTopicDto>>> GetTutorsTopics(CancellationToken cancellationToken)
+    {
+        string email = GetUserEmail();
+        return _mediator.Send(new GetAllTopicsForTutor.Query(email), cancellationToken);
+    }
 
     /// <summary>
     /// Returns requested page of topics
@@ -65,9 +66,32 @@ public class TopicsController : BaseApiController
         [FromQuery] long fieldOfStudyId, [FromQuery] string yearOfDefence, [FromQuery] int page = DefaultPage,
         [FromQuery] int pageSize = DefaultPageSize, CancellationToken cancellationToken = default)
     {
-        string userEmail = GetUserEmail();
         return _mediator.Send(
             new GetAllTopicsForFieldOfStudyAndYear.Query(fieldOfStudyId, yearOfDefence, page,
+                pageSize), cancellationToken);
+    }
+
+
+    /// <summary>
+    /// Returns requested page of topics for tutor
+    /// </summary>
+    /// <param name="fieldOfStudyId">Field of study id</param>
+    /// <param name="yearOfDefence">Year of defence of the theses</param>
+    /// <param name="page">Request result page, default: 1</param>
+    /// <param name="pageSize">Count of items to return at max, default: 10</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Paged result with topics for tutor</returns>
+    /// <response code="200">Found topics for tutor</response>
+    [HttpGet]
+    [Route("topicsForTutorPage")]
+    [Authorize(Roles = Role.TutorRole)]
+    public Task<PagedResultDto<TutorsTopicDto>> GetTopicsForTutorPage(
+        [FromQuery] long fieldOfStudyId, [FromQuery] string yearOfDefence, [FromQuery] int page = DefaultPage,
+        [FromQuery] int pageSize = DefaultPageSize, CancellationToken cancellationToken = default)
+    {
+        string userEmail = GetUserEmail();
+        return _mediator.Send(
+            new GetAllTopicsForTutorForFieldOfStudyAndYear.Query(userEmail, fieldOfStudyId, yearOfDefence, page,
                 pageSize), cancellationToken);
     }
 

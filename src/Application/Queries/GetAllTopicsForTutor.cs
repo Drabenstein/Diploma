@@ -6,10 +6,11 @@ using MediatR;
 namespace Application.Queries;
 public static class GetAllTopicsForTutor
 {
-    public record Query(string email) : IRequest<IEnumerable<FieldOfStudyInitialTableDto<StudentsTopicDto>>>;
+    public record Query(string Email) : IRequest<IEnumerable<FieldOfStudyInitialTableDto<TutorsTopicDto>>>;
 
-    public class Handler : IRequestHandler<Query, IEnumerable<FieldOfStudyInitialTableDto<StudentsTopicDto>>>
+    public class Handler : IRequestHandler<Query, IEnumerable<FieldOfStudyInitialTableDto<TutorsTopicDto>>>
     {
+
         private const string Sql = @"SELECT fos.field_of_study_id AS Id,
             fos.name AS Name,
             fos.degree AS Degree,
@@ -29,29 +30,29 @@ public static class GetAllTopicsForTutor
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        public async Task<IEnumerable<FieldOfStudyInitialTableDto<StudentsTopicDto>>> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<FieldOfStudyInitialTableDto<TutorsTopicDto>>> Handle(Query request, CancellationToken cancellationToken)
         {
             using var connection = await _sqlConnectionFactory.CreateOpenConnectionAsync().ConfigureAwait(false);
-            var initialTableDtos = await connection.QueryAsync<FieldOfStudyInitialTableDto<StudentsTopicDto>>(Sql).ConfigureAwait(false);
+            var initialTableDtos = await connection.QueryAsync<FieldOfStudyInitialTableDto<TutorsTopicDto>>(Sql).ConfigureAwait(false);
 
-            var fieldOfStudyInitialTableDtos = initialTableDtos as FieldOfStudyInitialTableDto<StudentsTopicDto>[] ??
+            var fieldOfStudyInitialTableDtos = initialTableDtos as FieldOfStudyInitialTableDto<TutorsTopicDto>[] ??
                                    initialTableDtos.ToArray();
 
             foreach (var initialTableDto in fieldOfStudyInitialTableDtos)
             {
                 initialTableDto.Data = await _mediator
-                    .Send(CreateDataQuery(initialTableDto.DefenceYear, initialTableDto.Id),
+                    .Send(CreateDataQuery(request.Email, initialTableDto.DefenceYear, initialTableDto.Id),
                         cancellationToken).ConfigureAwait(false);
             }
 
             return fieldOfStudyInitialTableDtos;
         }
 
-        private GetAllTopicsForFieldOfStudyAndYear.Query CreateDataQuery(string defenceYear, long fieldOfStudyId)
+        private GetAllTopicsForTutorForFieldOfStudyAndYear.Query CreateDataQuery(string email, string defenceYear, long fieldOfStudyId)
         {
             const int defaultPage = 0;
             const int defaultItemsPerPage = 10;
-            return new GetAllTopicsForFieldOfStudyAndYear.Query(
+            return new GetAllTopicsForTutorForFieldOfStudyAndYear.Query(Email: email,
                 FieldOfStudyId: fieldOfStudyId, YearOfDefence: defenceYear, Page: defaultPage,
                 ItemsPerPage: defaultItemsPerPage);
         }
