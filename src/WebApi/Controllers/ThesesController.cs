@@ -20,6 +20,36 @@ public class ThesesController : BaseApiController
     }
 
     /// <summary>
+    /// Returns id of user's thesis
+    /// </summary>
+    /// <returns>Id of user's thesis. 0 if user has no thesis</returns>
+    /// <response code="200">Returns id of user's thesis</response>
+    [HttpGet]
+    [Route("get-thesis-id")]
+    [Authorize(Roles = Role.StudentRole)]
+    public Task<long> GetUsersThesisId(CancellationToken cancellationToken)
+    {
+        string userEmail = GetUserEmail();
+        return _mediator.Send(new GetUserThesisId.Query(userEmail), cancellationToken);
+    }
+
+    /// <summary>
+    /// Returns user's thesis by thesis id
+    /// </summary>
+    /// <returns>User's thesis data and it's reviews</returns>
+    /// <response code="200">Returns user's thesis data and it's reviews</response>
+    [HttpGet]
+    [Route("my-thesis")]
+    [Authorize(Roles = Role.StudentRole)]
+    public Task<MyThesisDto> GetMyThesis([FromQuery] long ThesisId, CancellationToken cancellationToken)
+    {
+        string userEmail = GetUserEmail();
+        return _mediator.Send(new GetMyThesis.Query(userEmail, ThesisId), cancellationToken);
+    }
+
+
+
+    /// <summary>
     /// Returns all field of studies where user supervises at least one thesis with initial number of theses
     /// </summary>
     /// <returns>Field of studies with paged supervised theses</returns>
@@ -56,4 +86,5 @@ public class ThesesController : BaseApiController
             new GetSupervisedThesesForYearOfDefenceAndField.Query(userEmail, fieldOfStudyId, yearOfDefence, page,
                 pageSize), cancellationToken);
     }
+
 }
