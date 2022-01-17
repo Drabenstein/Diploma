@@ -37,7 +37,7 @@ public static class UpdateTutorAreasOfInterest
             }
 
             await _dbContext.SaveChangesAsync().ConfigureAwait(false);
-            return new Unit();
+            return Unit.Value;
         }
     }
 

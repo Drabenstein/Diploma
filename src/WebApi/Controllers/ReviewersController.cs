@@ -33,7 +33,7 @@ public class ReviewersController : BaseApiController
     /// <response code="200">Returns requested page reviewers and their interests</response>
     [HttpGet]
     [Route("getReviewersWithInterests")]
-    [Authorize(Roles = Role.DeansAssistantRole)]
+    [Authorize(Roles = Role.ProgramCommittee)]
     public Task<PagedResultDto<ReviewerWithInterestsDto>> GetReviewers([FromQuery] long[] AreaOfInterestIds, 
         [FromQuery] int minNoReviews = DefaultMinNoReviews, [FromQuery] int maxNoReviews = DefaultMaxNoReviews, [FromQuery] int page = DefaultPage,
         [FromQuery] int pageSize = DefaultPageSize, CancellationToken cancellationToken = default)

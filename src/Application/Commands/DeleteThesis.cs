@@ -28,7 +28,7 @@ public static class DeleteThesis
 
         public Handler(ISqlConnectionFactory sqlConnectionFactory, IS3Service s3Service)
         {
-            _sqlConnectionFactory = sqlConnectionFactory;
+            _sqlConnectionFactory = sqlConnectionFactory ?? throw new ArgumentNullException(nameof(sqlConnectionFactory));
             _s3Service = s3Service;
         }
         public async Task<int> Handle(Command request, CancellationToken cancellationToken)

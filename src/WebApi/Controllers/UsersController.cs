@@ -30,6 +30,12 @@ public class UsersController : BaseApiController
         return result ? Ok() : NoContent();
     }
 
+    /// <summary>
+    /// Returns student's personal data
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns>StudentDataDto object with student's personal data</returns>
+    /// <response code="200">Returns student's personal data</response>
     [HttpGet]
     [Route("myData/student")]
     [Authorize(Roles = Role.StudentRole)]
@@ -39,6 +45,12 @@ public class UsersController : BaseApiController
         return _mediator.Send(new GetStudentData.Query(email), cancellationToken);
     }
 
+    /// <summary>
+    /// Returns tutor's personal data
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns>TutorDataDto object with tutor's personal data</returns>
+    /// <response code="200">Returns tutor's personal data</response>
     [HttpGet]
     [Route("myData/tutor")]
     [Authorize(Roles = Role.TutorRole)]
@@ -48,6 +60,13 @@ public class UsersController : BaseApiController
         return _mediator.Send(new GetTutorData.Query(email), cancellationToken);
     }
 
+    /// <summary>
+    /// Updates tutor's areas of interest
+    /// </summary>
+    /// <param name="AreasOfInterestIds">Array consisting of all (previous and new) area of interest ids, which should be connected to requesting tutor</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    /// <response code="200"></response>
     [HttpPost]
     [Route("myData/updateAreasOfInterest")]
     [Authorize(Roles = Role.TutorRole)]

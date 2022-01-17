@@ -15,7 +15,7 @@ public static class SendDeclaration
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
         public Handler(ISqlConnectionFactory sqlConnectionFactory)
         {
-            _sqlConnectionFactory = sqlConnectionFactory;
+            _sqlConnectionFactory = sqlConnectionFactory ?? throw new ArgumentNullException(nameof(sqlConnectionFactory));
         }
 
         private const string Command = @"
@@ -31,23 +31,29 @@ public static class SendDeclaration
 
             var date = request.declarationDto.DeclarationDateTime.Date.ToString("yyyy-MM-dd");
 
-            await connection.ExecuteAsync(Command, new
+            using (var transaction = connection.BeginTransaction()) 
             {
-                ObjectiveOfWork = request.declarationDto.ObjectiveOfWork,
-                OperatingRange = request.declarationDto.OperatingRange,
-                Language = request.declarationDto.Language,
-                Date = date,
-                ThesisId = request.declarationDto.ThesisId
-            }).ConfigureAwait(false);
 
-            await connection.ExecuteAsync(UpdateThesisCommand, new
-            {
-                Language = request.declarationDto.Language,
-                HasConsentToChangeLanguage = request.declarationDto.HasConsentToChangeLanguage,
-                ThesisId = request.declarationDto.ThesisId
-            }).ConfigureAwait(false);
+                await connection.ExecuteAsync(Command, new
+                {
+                    ObjectiveOfWork = request.declarationDto.ObjectiveOfWork,
+                    OperatingRange = request.declarationDto.OperatingRange,
+                    Language = request.declarationDto.Language,
+                    Date = date,
+                    ThesisId = request.declarationDto.ThesisId
+                }).ConfigureAwait(false);
 
-            return new Unit();
+                await connection.ExecuteAsync(UpdateThesisCommand, new
+                {
+                    Language = request.declarationDto.Language,
+                    HasConsentToChangeLanguage = request.declarationDto.HasConsentToChangeLanguage,
+                    ThesisId = request.declarationDto.ThesisId
+                }).ConfigureAwait(false);
+
+                transaction.Commit();
+            }
+
+            return Unit.Value;
         }
     }
 

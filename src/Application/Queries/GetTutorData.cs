@@ -20,7 +20,7 @@ public static  class GetTutorData
 
         public Handler(ISqlConnectionFactory sqlConnectionFactory)
         {
-            _sqlConnectionFactory = sqlConnectionFactory;
+            _sqlConnectionFactory = sqlConnectionFactory ?? throw new ArgumentNullException(nameof(sqlConnectionFactory));
         }
 
         private const string Sql = "select u.first_name || ' ' || u.last_name as \"Name\", u.department as \"Department\", u.\"position\" as \"Position\", u.has_consent_to_extend_pensum as \"HasConsentToExtendPensum\", string_agg(aoi.areas_of_interest_id::text, ',') as \"AreasOfInterestIds\" from \"user\" as u join area_of_interest_user as aoi on aoi.users_id = u.user_id" +

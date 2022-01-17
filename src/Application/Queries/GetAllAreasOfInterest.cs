@@ -13,7 +13,7 @@ public static class GetAllAreasOfInterest
 
         public Handler(ISqlConnectionFactory sqlConnectionFactory)
         {
-            _sqlConnectionFactory = sqlConnectionFactory;
+            _sqlConnectionFactory = sqlConnectionFactory ?? throw new ArgumentNullException(nameof(sqlConnectionFactory));
         }
 
         private const string Sql = "select area_of_interest_id as \"Id\", \"name\" as \"Name\" from area_of_interest";

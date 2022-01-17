@@ -17,8 +17,13 @@ public class DeclarationsController : BaseApiController
         _mediator = mediator;
     }
 
+    /// <summary>
+    /// Requests sending a declaration by student
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <param name="declarationDto">Data transfer object with declaration data</param>
+    /// <response code="200"></response>
     [HttpPost]
-    [Route("sendDeclaration")]
     [Authorize(Roles = Role.StudentRole)]
     public Task SendDeclaration([FromBody] SendDeclarationDto declarationDto, CancellationToken cancellationToken)
     {
