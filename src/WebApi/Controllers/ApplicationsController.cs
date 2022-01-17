@@ -49,6 +49,9 @@ public class ApplicationsController : BaseApiController
     /// <response code="422">Validation of the request failed</response>
     [HttpGet]
     [Authorize(Roles = Role.TutorRole)]
+    [ProducesResponseType(typeof(PagedResultDto<ApplicationDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public Task<PagedResultDto<ApplicationDto>> GetSupervisedAsync(
         [FromQuery] long fieldOfStudyId, [FromQuery] string yearOfDefence, [FromQuery] int page = DefaultPage,
         [FromQuery] int pageSize = DefaultPageSize, CancellationToken cancellationToken = default)
@@ -71,7 +74,11 @@ public class ApplicationsController : BaseApiController
     /// <response code="422">Validation of the request failed</response>
     [HttpPost]
     [Route("{applicationId}/accept")]
-    [Authorize(Roles = "tutor")]
+    [Authorize(Roles = Role.TutorRole)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> AcceptAsync([FromRoute] long applicationId, CancellationToken cancellationToken)
     {
         var email = GetUserEmail();
@@ -91,7 +98,11 @@ public class ApplicationsController : BaseApiController
     /// <response code="422">Validation of the request failed</response>
     [HttpPost]
     [Route("{applicationId}/reject")]
-    [Authorize(Roles = "tutor")]
+    [Authorize(Roles = Role.TutorRole)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> RejectAsync([FromRoute] long applicationId, CancellationToken cancellationToken)
     {
         var email = GetUserEmail();
@@ -111,7 +122,11 @@ public class ApplicationsController : BaseApiController
     /// <response code="422">Validation of the request failed</response>
     [HttpPost]
     [Route("{applicationId}/confirm")]
-    [Authorize(Roles = "student")]
+    [Authorize(Roles = Role.StudentRole)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> ConfirmAsync([FromRoute] long applicationId, CancellationToken cancellationToken)
     {
         var email = GetUserEmail();
@@ -131,7 +146,11 @@ public class ApplicationsController : BaseApiController
     /// <response code="422">Validation of the request failed</response>
     [HttpPost]
     [Route("{applicationId}/cancel")]
-    [Authorize(Roles = "student")]
+    [Authorize(Roles = Role.StudentRole)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> CancelAsync([FromRoute] long applicationId, CancellationToken cancellationToken)
     {
         var email = GetUserEmail();
@@ -147,11 +166,13 @@ public class ApplicationsController : BaseApiController
     /// <returns>Found application details</returns>
     /// <response code="200">Application found</response>
     /// <response code="404">Application not found</response>
-    /// <response code="409">Action cannot be permitted</response>
     /// <response code="422">Validation of the request failed</response>
     [HttpGet]
     [Route("{applicationId}")]
-    [Authorize(Roles = "tutor,student")]
+    [Authorize(Roles = $"{Role.TutorRole},{Role.TutorRole}")]
+    [ProducesResponseType(typeof(ApplicationDetailsDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> GetDetailsAsync([FromRoute] long applicationId,
         CancellationToken cancellationToken)
     {
