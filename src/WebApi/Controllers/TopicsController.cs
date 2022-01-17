@@ -218,4 +218,52 @@ public class TopicsController : BaseApiController
             new GetTopicsForConsiderationByYearOfDefenceAndField.Query(fieldOfStudyId, yearOfDefence, page, pageSize),
             cancellationToken);
     }
+
+    /// <summary>
+    /// Accepts topics in bulk
+    /// </summary>
+    /// <param name="topicsIds">Topics ids to accept, max: 50</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpPost]
+    [Route("{topicId}/accept")]
+    [Authorize(Roles = Role.ProgramCommittee)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    public async Task<IActionResult> BulkAcceptTopicsAsync([FromBody] long[]? topicsIds, CancellationToken cancellationToken)
+    {
+        if (topicsIds is null)
+        {
+            return BadRequest();
+        }
+
+        await _mediator.Send(new BulkAcceptTopics.Command(topicsIds), cancellationToken);
+        return Ok();
+    }
+    
+    /// <summary>
+    /// Rejects topics in bulk
+    /// </summary>
+    /// <param name="topicsIds">Topics ids to reject, max: 50</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpPost]
+    [Route("{topicId}/reject")]
+    [Authorize(Roles = Role.ProgramCommittee)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    public async Task<IActionResult> BulkRejectTopicsAsync([FromBody] long[]? topicsIds, CancellationToken cancellationToken)
+    {
+        if (topicsIds is null)
+        {
+            return BadRequest();
+        }
+
+        await _mediator.Send(new BulkRejectTopics.Command(topicsIds), cancellationToken);
+        return Ok();
+    }
 }
