@@ -10,7 +10,7 @@ public record Application : EntityBase
     public Topic Topic { get; set; }
     public DateTime Timestamp { get; set; }
     public string Message { get; set; }
-    public ApplicationStatus Status { get; private set; }
+    public ApplicationStatus Status { get; private set; } = ApplicationStatus.Sent;
     public bool IsTopicProposal { get; set; }
 
     public void AcceptApplication()

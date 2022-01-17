@@ -20,7 +20,7 @@ public static class ProposeTopic
 
         public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
         {
-            var user = _dbContext.Set<User>().FirstOrDefault(x => x.Email.Address == request.UserEmail);
+            var user = _dbContext.Set<Student>().FirstOrDefault(x => x.Email.Address == request.UserEmail);
 
             var fieldOfStudy = _dbContext.Set<FieldOfStudy>().FirstOrDefault(x => x.Id == request.FieldOfStudyId);
 
@@ -52,6 +52,7 @@ public static class ProposeTopic
             };
 
             await _dbContext.Set<Core.Models.Topics.Application>().AddAsync(application, cancellationToken).ConfigureAwait(false);
+            await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             return Unit.Value;
         }

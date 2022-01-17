@@ -81,6 +81,22 @@ public class TopicsController : BaseApiController
         return _mediator.Send(new GetFieldsOfStudyForApplication.Query(email), cancellationToken);
     }
 
+    /// <summary>
+    /// Sends an application for an existing topic
+    /// </summary>
+    /// <param name="Message">Message to topic supervisor</param>
+    /// <param name="TopicId">Id of the topic applied for</param>
+    /// <param name="cancellationToken"></param>
+    /// <response code="200">Application was added</response>
+    [HttpPost]
+    [Route("applyForTopic")]
+    [Authorize(Roles = Role.StudentRole)]
+    public Task ApplyForTopic([FromQuery] long TopicId, string Message, CancellationToken cancellationToken)
+    {
+        string email = GetUserEmail();
+        return _mediator.Send(new ApplyForTopic.Command(email, TopicId, Message), cancellationToken);
+    }
+
 
 }
 
