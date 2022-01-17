@@ -1,5 +1,7 @@
 ﻿using Application.Commands;
 using Application.Commands.Dtos;
+using Application.Queries;
+using Application.Queries.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,5 +30,20 @@ public class DeclarationsController : BaseApiController
     public Task SendDeclaration([FromBody] SendDeclarationDto declarationDto, CancellationToken cancellationToken)
     {
         return _mediator.Send(new SendDeclaration.Command(declarationDto), cancellationToken);
+    }
+
+    /// <summary>
+    /// Returns a DTO with thesis data for declaration
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <param name="ThesisId">Id of the thesis whose data will be retrieved</param>
+    /// <returns>DTO with thesis data for declaration</returns>
+    /// <response code="200">Returns a DTO with thesis data for declaration</response>
+    [HttpGet]
+    [Authorize(Roles = Role.StudentRole)]
+    public Task<DeclarationDataDto> GetDataForDeclaration([FromQuery] long ThesisId, CancellationToken cancellationToken)
+    {
+        string email = GetUserEmail();
+        return _mediator.Send(new GetDataForDeclaration.Query(email, ThesisId), cancellationToken);
     }
 }
