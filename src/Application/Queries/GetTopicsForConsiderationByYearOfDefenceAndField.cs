@@ -69,7 +69,15 @@ public static class GetTopicsForConsiderationByYearOfDefenceAndField
                 })
                 .ConfigureAwait(false);
 
-            return await results.GetPagedResultAsync(connection, CountQuery, new
+            var topicForConsiderationDtos = results as TopicForConsiderationDto[] ?? results.ToArray();
+            foreach (var topicForConsiderationDto in topicForConsiderationDtos)
+            {
+                topicForConsiderationDto.SupervisorFullName =
+                    topicForConsiderationDto.SupervisorFullName.CombineAcademicDegreeAndFullName(
+                        topicForConsiderationDto.SupervisorAcademicDegree);
+            }
+            
+            return await topicForConsiderationDtos.GetPagedResultAsync(connection, CountQuery, new
                 {
                     FieldOfStudyId = request.FieldOfStudyId,
                     YearOfDefence = request.YearOfDefence

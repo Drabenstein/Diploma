@@ -55,7 +55,8 @@ public class ThesesController : BaseApiController
     [HttpGet]
     [Route("supervised-by-field")]
     [Authorize(Roles = Role.TutorRole)]
-    public Task<IEnumerable<FieldOfStudyInitialTableDto<SupervisedThesisDto>>> GetSupervisedByFieldAsync(CancellationToken cancellationToken)
+    public Task<IEnumerable<FieldOfStudyInitialTableDto<SupervisedThesisDto>>> GetSupervisedByFieldAsync(
+        CancellationToken cancellationToken)
     {
         string userEmail = GetUserEmail();
         return _mediator.Send(new GetSupervisedTheses.Query(userEmail), cancellationToken);
@@ -85,4 +86,42 @@ public class ThesesController : BaseApiController
                 pageSize), cancellationToken);
     }
 
+    /// <summary>
+    /// Gets fields of studies with paged theses which are open to assign reviewer
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("reviewer-assignment-initial")]
+    [Authorize(Roles = Role.ProgramCommittee)]
+    [ProducesResponseType(typeof(IEnumerable<FieldOfStudyInitialTableDto<ThesisForReviewerAssignmentDto>>), StatusCodes.Status200OK)]
+    public Task<IEnumerable<FieldOfStudyInitialTableDto<ThesisForReviewerAssignmentDto>>>
+        GetThesesForReviewerAssignmentByFieldAsync(CancellationToken cancellationToken)
+    {
+        return _mediator.Send(new GetThesesForReviewerAssignment.Query(), cancellationToken);
+    }
+
+    /// <summary>
+    /// Gets page of theses open to assign a reviewer for specific field of study id and year of defence
+    /// </summary>
+    /// <param name="fieldOfStudyId">Field of study id</param>
+    /// <param name="yearOfDefence">Year of defence</param>
+    /// <param name="page">Page</param>
+    /// <param name="pageSize">Maximum items per page</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("reviewer-assignment")]
+    [Authorize(Roles = Role.ProgramCommittee)]
+    [ProducesResponseType(typeof(PagedResultDto<ThesisForReviewerAssignmentDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    public Task<PagedResultDto<ThesisForReviewerAssignmentDto>>
+        GetThesesForReviewerAssignmentAsync([FromQuery] long fieldOfStudyId, [FromQuery] string yearOfDefence,
+            [FromQuery] int page = DefaultPage,
+            [FromQuery] int pageSize = DefaultPageSize, CancellationToken cancellationToken = default)
+    {
+        return _mediator.Send(
+            new GetThesesForReviewerAssignmentForYearOfDefenceAndField.Query(fieldOfStudyId, yearOfDefence, page,
+                pageSize), cancellationToken);
+    }
 }

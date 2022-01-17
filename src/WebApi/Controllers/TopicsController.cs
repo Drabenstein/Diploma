@@ -238,7 +238,7 @@ public class TopicsController : BaseApiController
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPost]
-    [Route("{topicId}/accept")]
+    [Route("bulk-accept")]
     [Authorize(Roles = Role.ProgramCommittee)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -262,7 +262,7 @@ public class TopicsController : BaseApiController
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPost]
-    [Route("{topicId}/reject")]
+    [Route("bulk-reject")]
     [Authorize(Roles = Role.ProgramCommittee)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

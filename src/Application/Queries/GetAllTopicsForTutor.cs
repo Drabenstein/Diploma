@@ -19,6 +19,7 @@ public static class GetAllTopicsForTutor
             t.year_of_defence AS DefenceYear
             FROM topic t
                 JOIN field_of_study fos on t.field_of_study_id = fos.field_of_study_id
+            GROUP BY fos.field_of_study_id, fos.name, fos.degree, fos.study_form, fos.lecture_language, t.year_of_defence
             ORDER BY t.year_of_defence DESC, fos.name ASC";
 
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
