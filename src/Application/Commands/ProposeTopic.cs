@@ -1,5 +1,6 @@
 ﻿using Core.Models.Topics;
 using Core.Models.Users;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,7 +40,7 @@ public static class ProposeTopic
                 YearOfDefence = studentFieldOfStudy.PlannedYearOfDefence
             };
 
-            await _dbContext.Set<Topic>().AddAsync(topic).ConfigureAwait(false);
+            await _dbContext.Set<Topic>().AddAsync(topic, cancellationToken).ConfigureAwait(false);
 
             var application = new Core.Models.Topics.Application
             {
@@ -50,9 +51,22 @@ public static class ProposeTopic
                 IsTopicProposal = true
             };
 
-            await _dbContext.Set<Core.Models.Topics.Application>().AddAsync(application).ConfigureAwait(false);
+            await _dbContext.Set<Core.Models.Topics.Application>().AddAsync(application, cancellationToken).ConfigureAwait(false);
 
             return Unit.Value;
+        }
+    }
+
+    public class Validator : AbstractValidator<Command>
+    {
+        public Validator()
+        {
+            RuleFor(x => x.EnglishName).NotEmpty();
+            RuleFor(x => x.Message).NotEmpty();
+            RuleFor(x => x.UserEmail).EmailAddress();
+            RuleFor(x => x.MaxRealizationNumber).GreaterThanOrEqualTo(0);
+            RuleFor(x => x.FieldOfStudyId).GreaterThan(0);
+            RuleFor(x => x.PolishName).NotEmpty();
         }
     }
 
