@@ -33,7 +33,6 @@ public static class ProposeTopic
                 Proposer = user,
                 IsProposedByStudent = true,
                 MaxRealizationNumber = request.MaxRealizationNumber,
-                IsAccepted = null,
                 FieldOfStudy = fieldOfStudy,
                 Name = request.PolishName,
                 EnglishName = request.EnglishName,

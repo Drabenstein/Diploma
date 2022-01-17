@@ -15,7 +15,7 @@ public record Topic : EntityBase
     public Tutor Supervisor { get; set; }
     public string Name { get; set; }
     public string EnglishName { get; set; }
-    public bool? IsAccepted { get; set; }
+    public bool? IsAccepted { get; private set; }
     public bool IsFree { get; set; }
     public int MaxRealizationNumber { get; set; }
     public string YearOfDefence { get; set; }
@@ -54,5 +54,25 @@ public record Topic : EntityBase
     {
         var application = _applications.Single(x => x.Id == applicationId);
         application.CancelApplication();
+    }
+
+    public void AcceptTopic()
+    {
+        ChangeIsAccepted(true);
+    }
+
+    public void RejectTopic()
+    {
+        ChangeIsAccepted(false);
+    }
+
+    private void ChangeIsAccepted(bool desiredValue)
+    {
+        if (this.IsAccepted is not null)
+        {
+            throw new InvalidOperationException($"Topic is already considered - it is { (this.IsAccepted.Value ? "accepted" : "rejected" )}");
+        }
+
+        this.IsAccepted = desiredValue;
     }
 }
