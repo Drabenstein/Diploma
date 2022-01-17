@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Commands;
+//WIP
 public static class ProposeTopic
 {
     public record Command(string UserEmail, long TutorId, long FieldOfStudyId, int MaxRealizationNumber, string PolishName, string EnglishName, string Message) : IRequest<Unit>;
@@ -44,7 +45,7 @@ public static class ProposeTopic
 
             var application = new Core.Models.Topics.Application
             {
-                Submitter = user as Student,
+                Submitter = user,
                 Topic = topic,
                 Timestamp = DateTime.Now,
                 Message = request.Message,
