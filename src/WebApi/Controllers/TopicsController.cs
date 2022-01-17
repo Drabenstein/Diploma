@@ -29,8 +29,7 @@ public class TopicsController : BaseApiController
     /// <response code="200">Returns all topics grouped by field of study and year of defence</response>
     [HttpGet]
     [Authorize(Roles = Role.StudentRole + "," + Role.TutorRole)]
-    public Task<IEnumerable<FieldOfStudyInitialTableDto<StudentsTopicDto>>> GetAllTopicsAsync(
-        CancellationToken cancellationToken)
+    public Task<IEnumerable<FieldOfStudyInitialTableDto<StudentsTopicDto>>> GetAllTopicsAsync(CancellationToken cancellationToken)
     {
         return _mediator.Send(new GetAllTopics.Query(), cancellationToken);
     }
@@ -44,8 +43,7 @@ public class TopicsController : BaseApiController
     [HttpGet]
     [Route("topicsForTutor")]
     [Authorize(Roles = Role.TutorRole)]
-    public Task<IEnumerable<FieldOfStudyInitialTableDto<TutorsTopicDto>>> GetTutorsTopics(
-        CancellationToken cancellationToken)
+    public Task<IEnumerable<FieldOfStudyInitialTableDto<TutorsTopicDto>>> GetTutorsTopics(CancellationToken cancellationToken)
     {
         string email = GetUserEmail();
         return _mediator.Send(new GetAllTopicsForTutor.Query(email), cancellationToken);
@@ -72,6 +70,7 @@ public class TopicsController : BaseApiController
             new GetAllTopicsForFieldOfStudyAndYear.Query(fieldOfStudyId, yearOfDefence, page,
                 pageSize), cancellationToken);
     }
+
 
     /// <summary>
     /// Returns requested page of topics for tutor
@@ -114,9 +113,7 @@ public class TopicsController : BaseApiController
         [FromQuery] string Message, CancellationToken cancellationToken)
     {
         string email = GetUserEmail();
-        return _mediator.Send(
-            new ProposeTopic.Command(email, TutorId, FieldOfStudyId, MaxRealizationNumber, PolishName, EnglishName,
-                Message), cancellationToken);
+        return _mediator.Send(new ProposeTopic.Command(email, TutorId, FieldOfStudyId, MaxRealizationNumber, PolishName, EnglishName, Message), cancellationToken);
     }
 
     /// <summary>
@@ -140,8 +137,7 @@ public class TopicsController : BaseApiController
     [HttpGet]
     [Route("possibleFieldsOfStudy")]
     [Authorize(Roles = Role.StudentRole)]
-    public Task<IEnumerable<FieldOfStudyForApplicationDto>> GetFieldsOfStudyForApplication(
-        CancellationToken cancellationToken)
+    public Task<IEnumerable<FieldOfStudyForApplicationDto>> GetFieldsOfStudyForApplication(CancellationToken cancellationToken)
     {
         string email = GetUserEmail();
         return _mediator.Send(new GetFieldsOfStudyForApplication.Query(email), cancellationToken);
@@ -180,6 +176,22 @@ public class TopicsController : BaseApiController
             dto.MaxNoRealizations, dto.PolishName, dto.EnglishName), cancellationToken);
     }
 
+
+    /// <summary>
+    /// Returns student's approved topics
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns>A DTO with topic and application ids, topic name in pl and en, supervisor data and approved status</returns>
+    /// <response code="200">Student's approved topics</response>
+    [HttpGet]
+    [Route("myAcceptedTopics")]
+    [Authorize(Roles = Role.StudentRole)]
+    public Task<IEnumerable<ApprovedTopicDto>> GetMyApprovedTopics(CancellationToken cancellationToken)
+    {
+        string email = GetUserEmail();
+        return _mediator.Send(new GetMyApprovedTopics.Query(email), cancellationToken);
+    }
+    
     /// <summary>
     /// Returns all field of studies with paged topics which were not considered
     /// </summary>
@@ -218,7 +230,7 @@ public class TopicsController : BaseApiController
             new GetTopicsForConsiderationByYearOfDefenceAndField.Query(fieldOfStudyId, yearOfDefence, page, pageSize),
             cancellationToken);
     }
-
+    
     /// <summary>
     /// Accepts topics in bulk
     /// </summary>
@@ -267,3 +279,4 @@ public class TopicsController : BaseApiController
         return Ok();
     }
 }
+
