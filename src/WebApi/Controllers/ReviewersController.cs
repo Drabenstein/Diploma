@@ -40,4 +40,44 @@ public class ReviewersController : BaseApiController
     {
         return _mediator.Send(new GetReviewersWithInterests.Query(minNoReviews, maxNoReviews, AreaOfInterestIds, page, pageSize), cancellationToken);
     }
+
+    /// <summary>
+    /// Returns all theses assigned whose reviewer is the requesting user
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns>All assigned theses grouped by field of study and year of defence</returns>
+    /// <response code="200">Returns all assigned theses grouped by field of study and year of defence</response>
+    [HttpGet]
+    [Route("getMyReviews")]
+    [Authorize(Roles = Role.TutorRole)]
+    public Task<IEnumerable<FieldOfStudyInitialTableDto<ReviewersThesisDto>>> GetThesesForReview(CancellationToken cancellationToken)
+    {
+        string email = GetUserEmail();
+        return _mediator.Send(new GetReviewersTheses.Query(email), cancellationToken);
+    }
+
+
+    /// <summary>
+    /// Returns requested page of theses whose reviewer is the requesting user
+    /// </summary>
+    /// <param name="fieldOfStudyId">Field of study id</param>
+    /// <param name="yearOfDefence">Year of defence of the theses</param>
+    /// <param name="page">Request result page, default: 1</param>
+    /// <param name="pageSize">Count of items to return at max, default: 10</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Paged result with theses whose reviewer is the requesting user</returns>
+    /// <response code="200">Found theses whose reviewer is the requesting user</response>
+    [HttpGet]
+    [Route("getMyReviewsPage")]
+    [Authorize(Roles = Role.TutorRole)]
+    public Task<PagedResultDto<ReviewersThesisDto>> GetTopicsForTutorPage(
+        [FromQuery] long fieldOfStudyId, [FromQuery] string yearOfDefence, [FromQuery] int page = DefaultPage,
+        [FromQuery] int pageSize = DefaultPageSize, CancellationToken cancellationToken = default)
+    {
+        string userEmail = GetUserEmail();
+        return _mediator.Send(
+            new GetReviewersThesesForFieldOfStudyAndYear.Query(userEmail, fieldOfStudyId, yearOfDefence, page,
+                pageSize), cancellationToken);
+    }
+
 }
