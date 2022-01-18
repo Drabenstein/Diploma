@@ -1,4 +1,6 @@
-﻿using Application.Common;
+﻿using Application.Commands;
+using Application.Commands.Dtos;
+using Application.Common;
 using Application.Queries;
 using Application.Queries.Dtos;
 using MediatR;
@@ -123,5 +125,30 @@ public class ThesesController : BaseApiController
         return _mediator.Send(
             new GetThesesForReviewerAssignmentForYearOfDefenceAndField.Query(fieldOfStudyId, yearOfDefence, page,
                 pageSize), cancellationToken);
+    }
+
+    /// <summary>
+    /// Changes reviewers for specified theses in bulk
+    /// </summary>
+    /// <param name="reviewerChangeDtos">Array of theses ids and reviewers ids </param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpPost]
+    [Route("reviewers/bulk")]
+    [Authorize(Roles = Role.ProgramCommittee)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    public async Task<IActionResult> BulkChangeReviewersAsync([FromBody] ReviewerChangeDto[]? reviewerChangeDtos,
+        CancellationToken cancellationToken)
+    {
+        if (reviewerChangeDtos is null)
+        {
+            return BadRequest();
+        }
+
+        await _mediator.Send(new BulkChangeReviewers.Command(reviewerChangeDtos), cancellationToken);
+        return Ok();
     }
 }
