@@ -31,6 +31,7 @@ public static class GetThesesForReviewerAssignmentForYearOfDefenceAndField
                     LEFT JOIN " + "\"user\"" + @" reviewer ON r.reviewer_id = reviewer.user_id
                 WHERE top.field_of_study_id = :FieldOfStudyId
                     AND top.year_of_defence = :YearOfDefence
+                    AND t.status <> 'Reviewed'
                 ORDER BY top.year_of_defence DESC, top.field_of_study_id ASC, top.topic_id DESC
                 OFFSET :OffsetRows ROWS FETCH NEXT :ItemsPerPage ROWS ONLY";
 
@@ -39,7 +40,8 @@ public static class GetThesesForReviewerAssignmentForYearOfDefenceAndField
                 FROM thesis t
                     JOIN topic top ON t.topic_id = top.topic_id
                 WHERE top.field_of_study_id = :FieldOfStudyId
-                    AND top.year_of_defence = :YearOfDefence";
+                    AND top.year_of_defence = :YearOfDefence
+                    AND t.status <> 'Reviewed'";
 
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
 

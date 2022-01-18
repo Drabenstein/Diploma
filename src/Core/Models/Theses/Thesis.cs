@@ -34,4 +34,27 @@ public record Thesis : EntityBase
     public virtual IReadOnlyCollection<Review> Reviews => _reviews.AsReadOnly();
     public string? CloudBucket { get; set; }
     public string? CloudKey { get; set; }
+
+    public void ChangeReviewer(Tutor reviewer)
+    {
+        if (this.Status == ThesisStatus.Reviewed)
+        {
+            throw new InvalidOperationException("Cannot change reviewer of already reviewed thesis");
+        }
+        
+        var existingReviewerReview = Reviews.FirstOrDefault(x => !x.Reviewer.Equals(this.Topic.Supervisor));
+        
+        if (existingReviewerReview is null)
+        {
+            var review = new Review(reviewer);
+            _reviews.Add(review);
+        }
+        else if (!existingReviewerReview.Reviewer.Equals(reviewer))
+        {
+            existingReviewerReview.Reviewer = null!;
+            _reviews.Remove(existingReviewerReview);
+            var review = new Review(reviewer);
+            _reviews.Add(review);
+        }
+    }
 }
