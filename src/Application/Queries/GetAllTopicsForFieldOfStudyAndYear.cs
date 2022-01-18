@@ -16,7 +16,7 @@ public static class GetAllTopicsForFieldOfStudyAndYear
     public class Handler : IRequestHandler<Query, PagedResultDto<StudentsTopicDto>>
     {
         private const string SqlQuery =
-            "select t.topic_id as \"Id\", t.\"name\" as \"Name\", t.english_name as \"EnglishName\", supervisor.academic_degree || ' ' || supervisor.first_name || ' ' || supervisor.last_name as \"TutorName\", reviewer.academic_degree || ' ' || reviewer.first_name || ' ' || reviewer.last_name as \"ReviewerName\", t.is_free as \"Free\", supervisor.department as \"Department\"" +
+            "select t.topic_id as \"Id\", t.\"name\" as \"Name\", t.english_name as \"EnglishName\", supervisor.academic_degree as \"TutorDegree\", supervisor.first_name || ' ' || supervisor.last_name as \"TutorName\", reviewer.academic_degree as \"ReviewerDegree\", reviewer.first_name || ' ' || reviewer.last_name as \"ReviewerName\", t.is_free as \"Free\", supervisor.department as \"Department\"" +
                 "from topic as t join \"user\" as supervisor on t.supervisor_id = supervisor.user_id" +
                 @"join thesis as the on t.topic_id = the.topic_id
                 join review as rev on rev.thesis_id = the.thesis_id" +
@@ -41,7 +41,7 @@ public static class GetAllTopicsForFieldOfStudyAndYear
             using var connection = await _sqlConnectionFactory.CreateOpenConnectionAsync().ConfigureAwait(false);
             var results =
                 await connection
-                    .QueryAsync<StudentsTopicDto>(SqlQuery, new
+                    .QueryAsync<StudentsTopicDtoWithDegrees>(SqlQuery, new
                     {
                         YearOfDefence = request.YearOfDefence,
                         FieldOfStudyId = request.FieldOfStudyId,
@@ -49,12 +49,36 @@ public static class GetAllTopicsForFieldOfStudyAndYear
                         ItemsPerPage = request.ItemsPerPage
                     }).ConfigureAwait(false);
 
-            return await results.GetPagedResultAsync(connection, SqlCountQuery, new
+            var dtos = results.Select(x => new StudentsTopicDto
+            {
+                Id = x.Id,
+                TopicName = x.TopicName,
+                EnglishTopicName = x.EnglishTopicName,
+                TutorName = x.TutorName.CombineAcademicDegreeAndFullName(x.TutorDegree),
+                ReviewerName = x.ReviewerName.CombineAcademicDegreeAndFullName(x.ReviewerDegree),
+                Status = x.Status,
+                Department = x.Department
+            }).ToList();
+
+            return await dtos.GetPagedResultAsync(connection, SqlCountQuery, new
             {
                 YearOfDefence = request.YearOfDefence,
                 FieldOfStudyId = request.FieldOfStudyId
             }, request.Page, request.ItemsPerPage).ConfigureAwait(false);
         }
+    }
+
+    private class StudentsTopicDtoWithDegrees
+    {
+        public long Id { get; set; }
+        public string TopicName { get; set; }
+        public string EnglishTopicName { get; set; }
+        public string TutorDegree { get; set; }
+        public string TutorName { get; set; }
+        public string ReviewerDegree { get; set; }
+        public string ReviewerName { get; set; }
+        public string Status { get; set; }
+        public string Department { get; set; }
     }
 
     public class Validator : AbstractValidator<Query>
