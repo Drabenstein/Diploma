@@ -8,4 +8,3 @@ public class ApprovedTopicDto
     public string Supervisor { get; set; }
     public string ApplicationStatus { get; set; }
 }
-

@@ -130,7 +130,7 @@ public class ApplicationsController : BaseApiController
     public async Task<IActionResult> ConfirmAsync([FromRoute] long applicationId, CancellationToken cancellationToken)
     {
         var email = GetUserEmail();
-        var result = await _mediator.Send(new AcceptApplication.Command(email, applicationId), cancellationToken);
+        var result = await _mediator.Send(new ConfirmApplication.Command(email, applicationId), cancellationToken);
         return result ? Ok() : NotFound();
     }
 

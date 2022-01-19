@@ -1,5 +1,6 @@
 ﻿using Application.Common;
 using Core;
+using Core.Models.Theses;
 using Core.Models.Topics.ValueObjects;
 using Core.Models.Users;
 using Dapper;
@@ -32,7 +33,7 @@ public static class ConfirmApplication
                 .Include(x => x.Applications)
                 .ThenInclude(a => a.Submitter)
                 .SingleOrDefaultAsync(x => x.Applications.Any(a =>
-                        a.Id == request.ApplicationId && a.Submitter.Email.Address == request.StudentEmail),
+                        a.Id == request.ApplicationId && a.Submitter.Email == request.StudentEmail),
                     cancellationToken: cancellationToken).ConfigureAwait(false);
 
             if (topic is null)
@@ -45,7 +46,7 @@ public static class ConfirmApplication
                 .Include(x => x.Applications)
                 .ThenInclude(x => x.Topic)
                 .ThenInclude(x => x.FieldOfStudy)
-                .SingleAsync(x => x.Email.Address == request.StudentEmail, cancellationToken).ConfigureAwait(false);
+                .SingleAsync(x => x.Email == request.StudentEmail, cancellationToken).ConfigureAwait(false);
 
             if (student.Applications.Any(a =>
                     a.Id != applicationToConfirm.Id && a.Topic.YearOfDefence == topic.YearOfDefence &&
@@ -57,13 +58,16 @@ public static class ConfirmApplication
 
             topic.ConfirmApplication(applicationToConfirm.Id);
 
-            foreach (var topicToCancelApplication in student.Applications.Select(x => x.Topic))
-            {
-                var applicationToCancelId =
-                    topicToCancelApplication.Applications.First(a => a.Submitter.Email.Address == request.StudentEmail)
-                        .Id;
-                topicToCancelApplication.CancelApplication(applicationToCancelId);
-            }
+            var thesis = topic.Theses.Last();
+            await _dbContext.Set<Thesis>().AddAsync(thesis).ConfigureAwait(false);
+
+            //foreach (var topicToCancelApplication in student.Applications.Select(x => x.Topic))
+            //{
+            //    var applicationToCancelId =
+            //        topicToCancelApplication.Applications.First(a => a.Submitter.Email == request.StudentEmail)
+            //            .Id;
+            //    topicToCancelApplication.CancelApplication(applicationToCancelId);
+            //}
 
             await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
             return true;
