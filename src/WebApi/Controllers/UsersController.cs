@@ -22,7 +22,7 @@ public class UsersController : BaseApiController
     [HttpPost]
     [Route("fetchData")]
     [Authorize]
-    public async Task<IActionResult> FetchDataAsync(CancellationToken cancellationToken )
+    public async Task<IActionResult> FetchDataAsync(CancellationToken cancellationToken = default)
     {
         string email = GetUserEmail();
         var roles = GetUserRoles();

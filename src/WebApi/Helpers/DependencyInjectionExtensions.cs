@@ -96,7 +96,19 @@ public static class DependencyInjectionExtensions
         services.AddScoped<ITranslationService, TranslationService>();
         services.AddScoped<IS3Service, S3Service>();
         services.AddScoped<IComprehendService, ComprehendService>();
-
     }
 
+    public static void AddCorsConfig(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(builder =>
+            {
+                builder.WithOrigins(configuration["Cors"])
+                    .AllowCredentials()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+        });
+    }
 }

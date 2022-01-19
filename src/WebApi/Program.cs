@@ -8,12 +8,12 @@ builder.Services.AddSwaggerGen(c => c.SwaggerDoc("v1", new Microsoft.OpenApi.Mod
 builder.Services.AddCommandQueries();
 builder.Services.AddAmazonClients();
 builder.Services.AddCaching();
+builder.Services.AddCorsConfig(builder.Configuration);
 
 string connectionString = builder.Configuration.GetConnectionString("DiplomaDb");
 builder.Services.AddDatabaseServices(connectionString);
 builder.Services.AddAmazonClients();
 builder.Services.AddAmazonServices();
-
 builder.Services.AddHttpContextServices(builder.Configuration);
 builder.Services.AddAuth0Authentication(builder.Configuration);
 
@@ -24,16 +24,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseHttpLogging();
 app.UseGlobalExceptionHandling();
 app.UseHttpsRedirection();
+app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-app.UseSpa(spa =>
-{
-    if (app.Environment.IsDevelopment())
-    {
-        spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
-    }
-});
 app.Run();
