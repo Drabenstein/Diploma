@@ -23,7 +23,7 @@ public static class GetFieldsOfStudyForApplication
         public async Task<IEnumerable<FieldOfStudyForApplicationDto>> Handle(Query request, CancellationToken cancellationToken)
         {
 
-            var user = await _dbContext.Set<Student>().FirstOrDefaultAsync(x => x.Email.Address == request.Email, cancellationToken).ConfigureAwait(false);
+            var user = await _dbContext.Set<Student>().FirstOrDefaultAsync(x => x.Email == request.Email, cancellationToken).ConfigureAwait(false);
 
             return await _dbContext.Set<FieldOfStudy>()
                 .Where(x => x.StudentFieldsOfStudy.Select(y => y.StudentId).Contains(user.Id))

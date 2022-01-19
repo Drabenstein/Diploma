@@ -20,7 +20,7 @@ public static class GetDataForReview
 
         public async Task<ReviewDataDto> Handle(Query request, CancellationToken cancellationToken)
         {
-            var user = await _dbContext.Set<Tutor>().FirstOrDefaultAsync(x => x.Email.Address == request.Email).ConfigureAwait(false);
+            var user = await _dbContext.Set<Tutor>().FirstOrDefaultAsync(x => x.Email == request.Email).ConfigureAwait(false);
 
             if (user == null) throw new InvalidOperationException("Current user not found");
 

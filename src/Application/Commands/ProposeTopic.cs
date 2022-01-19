@@ -20,7 +20,7 @@ public static class ProposeTopic
 
         public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
         {
-            var user = await _dbContext.Set<Student>().FirstOrDefaultAsync(x => x.Email.Address == request.UserEmail).ConfigureAwait(false);
+            var user = await _dbContext.Set<Student>().FirstOrDefaultAsync(x => x.Email == request.UserEmail).ConfigureAwait(false);
 
             var fieldOfStudy = await _dbContext.Set<FieldOfStudy>().FirstOrDefaultAsync(x => x.Id == request.FieldOfStudyId).ConfigureAwait(false);
 

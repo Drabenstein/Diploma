@@ -22,7 +22,7 @@ public static class RejectApplication
         {
             var topic = await _dbContext.Set<CoreTopics.Topic>()
                 .Include(x => x.Applications)
-                .Where(x => x.Supervisor.Email.Address == request.TutorEmail)
+                .Where(x => x.Supervisor.Email == request.TutorEmail)
                 .SingleOrDefaultAsync(x => x.Applications.Any(a => a.Id == request.ApplicationId),
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);

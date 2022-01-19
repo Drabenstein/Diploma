@@ -22,10 +22,10 @@ public static class CreateTopic
         public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
         {
             var users = await _dbContext.Set<Tutor>().ToListAsync();
-            var user = users.Where(x => x.Email.Address == request.UserEmail).FirstOrDefault();
+            var user = users.FirstOrDefault(x => x.Email == request.UserEmail);
 
 
-            var fieldOfStudy = await _dbContext.Set<FieldOfStudy>().FirstOrDefaultAsync(x => x.Id == request.FieldOfStudyId).ConfigureAwait(false);
+            var fieldOfStudy = await _dbContext.Set<FieldOfStudy>().FirstOrDefaultAsync(x => x.Id == request.FieldOfStudyId, cancellationToken: cancellationToken).ConfigureAwait(false);
             
             if(user == null || fieldOfStudy == null) throw new InvalidOperationException("Topic cannot be created with given data");
 
