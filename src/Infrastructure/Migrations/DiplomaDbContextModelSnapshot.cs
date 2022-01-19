@@ -257,7 +257,7 @@ namespace Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("timestamp");
 
-                    b.Property<long?>("TopicId")
+                    b.Property<long>("TopicId")
                         .HasColumnType("bigint")
                         .HasColumnName("topic_id");
 
@@ -491,7 +491,6 @@ namespace Infrastructure.Migrations
                         .HasColumnName("index_number");
 
                     b.HasIndex("IndexNumber")
-                        .IsUnique()
                         .HasDatabaseName("ix_user_index_number");
 
                     b.ToTable("user");
@@ -620,6 +619,8 @@ namespace Infrastructure.Migrations
                     b.HasOne("Core.Models.Topics.Topic", "Topic")
                         .WithMany("Applications")
                         .HasForeignKey("TopicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("fk_application_topic_topic_id");
 
                     b.Navigation("Submitter");

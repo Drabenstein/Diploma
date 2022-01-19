@@ -30,16 +30,25 @@ public static class FetchUserData
         public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
         {
             var cacheKey = $"{CacheKeyBase}-{request.Email}";
-            if (_cache.Get<UserDataDto?>(cacheKey) is not null)
+            if (_cache.Get<User>(cacheKey) is not null)
             {
                 return false;
             }
 
-            var userData = await _userDataFetcher.FetchUserDataAsync(request.Email).ConfigureAwait(false);
-            _cache.Set(cacheKey, userData);
-            var user = CreateUser(userData, request.Roles);
-            await _dbContext.Set<User>().AddAsync(user, cancellationToken).ConfigureAwait(false);
-            await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            var allUsers = await _dbContext.Set<User>().ToListAsync(cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
+            var user = allUsers.FirstOrDefault(x =>
+                string.Equals(x.Email.Address, request.Email, StringComparison.OrdinalIgnoreCase));
+
+            if (user is null)
+            {
+                var userData = await _userDataFetcher.FetchUserDataAsync(request.Email).ConfigureAwait(false);
+                user = CreateUser(userData, request.Roles);
+                await _dbContext.Set<User>().AddAsync(user, cancellationToken).ConfigureAwait(false);
+                await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            }
+
+            _cache.Set(cacheKey, user);
             return true;
         }
 
@@ -54,8 +63,7 @@ public static class FetchUserData
 
             if (roles.Any(x => string.Equals(x, "student", StringComparison.OrdinalIgnoreCase)))
             {
-                var index = int.Parse(email.Substring(0, email.IndexOf("@", StringComparison.OrdinalIgnoreCase)));
-                return new Student(firstName, lastName, email, index);
+                return new Student(firstName, lastName, email, 0);
             }
 
             return new User(firstName, lastName, new Email(email));

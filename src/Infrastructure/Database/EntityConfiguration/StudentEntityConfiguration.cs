@@ -14,8 +14,7 @@ public class StudentEntityConfiguration : IEntityTypeConfiguration<Student>
             .HasColumnNameSnakeCased()
             .IsRequired();
 
-        builder.HasIndex(x => x.IndexNumber)
-            .IsUnique();
+        builder.HasIndex(x => x.IndexNumber);
 
         builder.HasMany(x => x.StudentFieldOfStudies)
             .WithOne(x => x.Student)

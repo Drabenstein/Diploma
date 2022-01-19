@@ -20,7 +20,6 @@ public class Auth0UserDataFetcher : IUserDataFetcher
     {
         var userInfo = await _authenticationApiClient.GetUserInfoAsync(_contextAccessor.AccessToken)
             .ConfigureAwait(false);
-        Console.WriteLine(JsonSerializer.Serialize(userInfo));
         return new UserDataDto(userInfo.FirstName, userInfo.LastName, userInfo.FullName);
     }
 }
