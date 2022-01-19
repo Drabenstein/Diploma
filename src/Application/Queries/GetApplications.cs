@@ -64,7 +64,7 @@ public static class GetApplications
         private GetApplicationForYearOfDefenceAndField.Query CreateDataQuery(string tutorEmail, string defenceYear,
             long fieldOfStudyId)
         {
-            const int defaultPage = 0;
+            const int defaultPage = 1;
             const int defaultItemsPerPage = 10;
             return new GetApplicationForYearOfDefenceAndField.Query(TutorEmail: tutorEmail,
                 FieldOfStudyId: fieldOfStudyId, YearOfDefence: defenceYear, Page: defaultPage,

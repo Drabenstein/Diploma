@@ -21,7 +21,9 @@ public static class CreateTopic
 
         public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
         {
-            var user = await _dbContext.Set<Tutor>().FirstOrDefaultAsync(x => x.Email.Address == request.UserEmail).ConfigureAwait(false);
+            var users = await _dbContext.Set<Tutor>().ToListAsync();
+            var user = users.Where(x => x.Email.Address == request.UserEmail).FirstOrDefault();
+
 
             var fieldOfStudy = await _dbContext.Set<FieldOfStudy>().FirstOrDefaultAsync(x => x.Id == request.FieldOfStudyId).ConfigureAwait(false);
             

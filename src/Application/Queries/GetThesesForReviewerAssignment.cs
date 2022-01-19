@@ -48,7 +48,7 @@ public static class GetThesesForReviewerAssignment
                 .QueryAsync<FieldOfStudyInitialTableDto<ThesisForReviewerAssignmentDto>>(
                     SqlQuery).ConfigureAwait(false);
 
-            const int defaultPage = 0;
+            const int defaultPage = 1;
             const int defaultItemsPerPage = 10;
             var initialTableDtos = fositDtos as FieldOfStudyInitialTableDto<ThesisForReviewerAssignmentDto>[] ??
                                    fositDtos.ToArray();

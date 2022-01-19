@@ -50,7 +50,7 @@ public static class GetAllTopics
 
         private GetAllTopicsForFieldOfStudyAndYear.Query CreateDataQuery(string defenceYear, long fieldOfStudyId)
         {
-            const int defaultPage = 0;
+            const int defaultPage = 1;
             const int defaultItemsPerPage = 10;
             return new GetAllTopicsForFieldOfStudyAndYear.Query(
                 FieldOfStudyId: fieldOfStudyId, YearOfDefence: defenceYear, Page: defaultPage,

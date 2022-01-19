@@ -44,7 +44,7 @@ public static class GetTopicsForConsideration
                 .QueryAsync<FieldOfStudyInitialTableDto<TopicForConsiderationDto>>(
                     SqlQuery).ConfigureAwait(false);
 
-            const int defaultPage = 0;
+            const int defaultPage = 1;
             const int defaultItemsPerPage = 10;
             var initialTableDtos = fositDtos as FieldOfStudyInitialTableDto<TopicForConsiderationDto>[] ?? fositDtos.ToArray();
             foreach (var fosit in initialTableDtos)

@@ -51,7 +51,7 @@ public static class GetAllTopicsForTutor
 
         private GetAllTopicsForTutorForFieldOfStudyAndYear.Query CreateDataQuery(string email, string defenceYear, long fieldOfStudyId)
         {
-            const int defaultPage = 0;
+            const int defaultPage = 1;
             const int defaultItemsPerPage = 10;
             return new GetAllTopicsForTutorForFieldOfStudyAndYear.Query(Email: email,
                 FieldOfStudyId: fieldOfStudyId, YearOfDefence: defenceYear, Page: defaultPage,

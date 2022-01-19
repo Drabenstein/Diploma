@@ -24,6 +24,7 @@ namespace WebApi.Controllers
         /// <returns>All fields of study</returns>
         /// <response code="200">Returns all fields of study</response>
         [HttpGet]
+
         public Task<IEnumerable<FieldOfStudyForApplicationDto>> GetAllFieldsOfStudy(CancellationToken cancellationToken)
         {
             return _mediator.Send(new GetAllFieldsOfStudy.Query(), cancellationToken);
