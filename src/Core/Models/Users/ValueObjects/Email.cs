@@ -21,4 +21,10 @@ public record Email(string Address)
     {
         return new Email($"{firstName}.{lastName}@student.pwr.edu.pl");
     }
+
+    public static implicit operator string(Email email)
+    {
+        return email.Address;
+    }
+
 }

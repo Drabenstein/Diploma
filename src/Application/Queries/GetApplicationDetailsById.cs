@@ -18,7 +18,7 @@ public static class GetApplicationDetailsById
         s.index_number AS StudentIndex,
         fos.name AS FieldOfStudyName,
         fos.degree AS FieldOfStudyDegree,
-        fos.study_form AS StudyForm,
+        fos.study_form AS FieldOfStudyStudyForm,
         t.year_of_defence AS YearOfDefence,
         t.max_realization_number AS TopicMaxRealizationNumber,
         (SELECT COUNT(*) FROM application a1 WHERE a1.topic_id = t.topic_id AND a1.status IN ('Accepted', 'Confirmed')) AS TopicCurrentRealizations,
@@ -46,7 +46,7 @@ public static class GetApplicationDetailsById
         {
             using var connection = await _sqlConnectionFactory.CreateOpenConnectionAsync().ConfigureAwait(false);
             var userId = await connection.GetUserIdByEmailAsync(request.UserEmail).ConfigureAwait(false);
-            var result = await connection.QueryFirstOrDefaultAsync(SqlQuery, new
+            var result = await connection.QueryFirstOrDefaultAsync<ApplicationDetailsDto>(SqlQuery, new
             {
                 ApplicationId = request.ApplicationId,
                 UserId = userId

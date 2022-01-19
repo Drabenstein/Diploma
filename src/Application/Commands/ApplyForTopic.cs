@@ -19,7 +19,11 @@ public static class ApplyForTopic
 
         public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
         {
-            var user = _dbContext.Set<Student>().FirstOrDefault(x => x.Email.Address == request.UserEmail);
+            //var user = _dbContext.Set<Student>().FirstOrDefault(x => x.Email.Address == request.UserEmail);
+
+            var users = await _dbContext.Set<Student>().ToListAsync();
+            var user = users.Where(x => x.Email == request.UserEmail).FirstOrDefault();
+
             var topic = _dbContext.Set<Topic>().FirstOrDefault(x => x.Id == request.TopicId);
 
             if (user == null || topic == null) throw new InvalidOperationException("Cannot apply for thesis with given data");
@@ -28,7 +32,7 @@ public static class ApplyForTopic
             {
                 Submitter = user,
                 Topic = topic,
-                Timestamp = DateTime.Now,
+                Timestamp = DateTime.UtcNow,
                 Message = request.Message,
                 IsTopicProposal = false
             };

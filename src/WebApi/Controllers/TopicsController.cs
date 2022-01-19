@@ -61,7 +61,7 @@ public class TopicsController : BaseApiController
     /// <response code="200">Found topics</response>
     [HttpGet]
     [Route("topicsPage")]
-    [Authorize(Roles = Role.TutorRole)]
+    [Authorize(Roles = Role.StudentRole + "," + Role.TutorRole)]
     public Task<PagedResultDto<StudentsTopicDto>> GetTopicsPage(
         [FromQuery] long fieldOfStudyId, [FromQuery] string yearOfDefence, [FromQuery] int page = DefaultPage,
         [FromQuery] int pageSize = DefaultPageSize, CancellationToken cancellationToken = default)

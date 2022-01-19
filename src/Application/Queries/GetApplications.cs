@@ -22,7 +22,7 @@ public static class GetApplications
         FROM topic t
             JOIN field_of_study fos on t.field_of_study_id = fos.field_of_study_id
         WHERE supervisor_id = :TutorId
-            AND EXISTS (SELECT * FROM thesis t2
+            AND NOT EXISTS (SELECT * FROM thesis t2
                         WHERE t2.topic_id = t.topic_id)
         GROUP BY fos.field_of_study_id, fos.name, fos.degree, fos.study_form, fos.lecture_language, t.year_of_defence
         ORDER BY t.year_of_defence DESC";

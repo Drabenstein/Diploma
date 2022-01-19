@@ -22,9 +22,13 @@ public static class AcceptApplication
 
         public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
         {
+            //var topics = await _dbContext.Set<Topic>()
+            //    .Include(x => x.Applications).ToListAsync(cancellationToken);
+            //var topic = topics.Where(x => x.Supervisor.Email.Address == request.TutorEmail)
+            //    .SingleOrDefault(x => x.Applications.Any(a => a.Id == request.ApplicationId));
             var topic = await _dbContext.Set<Topic>()
                 .Include(x => x.Applications)
-                .Where(x => x.Supervisor.Email.Address == request.TutorEmail)
+                .Where(x => x.Supervisor.Email == request.TutorEmail)
                 .SingleOrDefaultAsync(x => x.Applications.Any(a => a.Id == request.ApplicationId),
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);

@@ -21,7 +21,7 @@ public static class GetApplicationForYearOfDefenceAndField
             FROM topic t
                 JOIN application a
                     ON t.topic_id = a.topic_id
-            WHERE t2.supervisor_id = :TutorId
+            WHERE t.supervisor_id = :TutorId
                 AND a.status = 'Sent'
                 AND t.year_of_defence = :YearOfDefence
                 AND t.field_of_study_id = :FieldOfStudyId";
