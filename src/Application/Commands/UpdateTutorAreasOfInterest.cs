@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Commands;
+
 public static class UpdateTutorAreasOfInterest
 {
     public record Command(long[] AreasOfInterestIds, string email) : IRequest<Unit>;
@@ -19,14 +20,16 @@ public static class UpdateTutorAreasOfInterest
 
         public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
         {
-            var user = _dbContext.Set<User>()
-                .FirstOrDefault(x => x.Email.Address == request.email);
+            var user = await _dbContext.Set<User>()
+                .FirstOrDefaultAsync(x => x.Email == request.email, cancellationToken: cancellationToken)
+                .ConfigureAwait(false);
 
             var userAreas = user?.AreasOfInterest.ToList();
 
-            var newAreas = await _dbContext.Set<AreaOfInterest>().Where(x => request.AreasOfInterestIds.Contains(x.Id)).ToListAsync().ConfigureAwait(false);
+            var newAreas = await _dbContext.Set<AreaOfInterest>().Where(x => request.AreasOfInterestIds.Contains(x.Id))
+                .ToListAsync().ConfigureAwait(false);
 
-            foreach(var area in newAreas.Except(userAreas ?? new List<AreaOfInterest>()))
+            foreach (var area in newAreas.Except(userAreas ?? new List<AreaOfInterest>()))
             {
                 user?.AddAreaOfInterest(area);
             }

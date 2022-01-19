@@ -32,7 +32,7 @@ public static class ConfirmApplication
                 .Include(x => x.Applications)
                 .ThenInclude(a => a.Submitter)
                 .SingleOrDefaultAsync(x => x.Applications.Any(a =>
-                        a.Id == request.ApplicationId && a.Submitter.Email.Address == request.StudentEmail),
+                        a.Id == request.ApplicationId && a.Submitter.Email == request.StudentEmail),
                     cancellationToken: cancellationToken).ConfigureAwait(false);
 
             if (topic is null)
@@ -45,7 +45,7 @@ public static class ConfirmApplication
                 .Include(x => x.Applications)
                 .ThenInclude(x => x.Topic)
                 .ThenInclude(x => x.FieldOfStudy)
-                .SingleAsync(x => x.Email.Address == request.StudentEmail, cancellationToken).ConfigureAwait(false);
+                .SingleAsync(x => x.Email == request.StudentEmail, cancellationToken).ConfigureAwait(false);
 
             if (student.Applications.Any(a =>
                     a.Id != applicationToConfirm.Id && a.Topic.YearOfDefence == topic.YearOfDefence &&
@@ -60,7 +60,7 @@ public static class ConfirmApplication
             foreach (var topicToCancelApplication in student.Applications.Select(x => x.Topic))
             {
                 var applicationToCancelId =
-                    topicToCancelApplication.Applications.First(a => a.Submitter.Email.Address == request.StudentEmail)
+                    topicToCancelApplication.Applications.First(a => a.Submitter.Email == request.StudentEmail)
                         .Id;
                 topicToCancelApplication.CancelApplication(applicationToCancelId);
             }

@@ -24,7 +24,7 @@ public static class CancelApplication
                 .Include(x => x.Applications)
                 .SingleOrDefaultAsync(
                     x => x.Applications.Any(a =>
-                        a.Id == request.ApplicationId && a.Submitter.Email.Address == request.StudentEmail),
+                        a.Id == request.ApplicationId && a.Submitter.Email == request.StudentEmail),
                     cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 

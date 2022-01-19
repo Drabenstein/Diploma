@@ -26,7 +26,7 @@ public static class GetMyThesis
 
         public async Task<MyThesisDto> Handle(Query request, CancellationToken cancellationToken)
         {
-            var user = await _dbContext.Set<Student>().FirstOrDefaultAsync(x => x.Email.Address == request.Email).ConfigureAwait(false);
+            var user = await _dbContext.Set<Student>().FirstOrDefaultAsync(x => x.Email == request.Email).ConfigureAwait(false);
 
             var thesis = await _dbContext.Set<Thesis>().FirstOrDefaultAsync(x => x.Id == request.ThesisId).ConfigureAwait(false);
 

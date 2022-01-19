@@ -20,7 +20,7 @@ public static class GetDataForDeclaration
 
         public async Task<DeclarationDataDto> Handle(Query request, CancellationToken cancellationToken)
         {
-            var user = await _dbContext.Set<Student>().FirstOrDefaultAsync(x => x.Email.Address == request.Email).ConfigureAwait(false);
+            var user = await _dbContext.Set<Student>().FirstOrDefaultAsync(x => x.Email == request.Email).ConfigureAwait(false);
 
             if (user == null) throw new InvalidOperationException("Cannot get data, user does not exist");
 
