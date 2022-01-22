@@ -34,7 +34,7 @@ namespace WebApi.Controllers
         [HttpPost]
         [RequestSizeLimit(20_000_000)]
         [Route("uploadThesis")]
-        public async Task<IActionResult> UploadThesis([FromQuery] int thesisId, [FromForm] byte[] file, CancellationToken cancellationToken)
+        public async Task<IActionResult> UploadThesis([FromQuery] int thesisId, [FromForm] string file, CancellationToken cancellationToken)
         {
             await _mediator.Send(new UploadThesis.Command(thesisId, file), cancellationToken);
             return Ok();

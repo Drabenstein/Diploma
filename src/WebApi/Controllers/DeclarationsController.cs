@@ -26,7 +26,7 @@ public class DeclarationsController : BaseApiController
     /// <param name="declarationDto">Data transfer object with declaration data</param>
     /// <response code="200"></response>
     [HttpPost]
-    [Authorize(Roles = Role.StudentRole)]
+    [Authorize(Roles = Role.Student)]
     public Task SendDeclaration([FromBody] SendDeclarationDto declarationDto, CancellationToken cancellationToken)
     {
         return _mediator.Send(new SendDeclaration.Command(declarationDto), cancellationToken);
@@ -40,7 +40,7 @@ public class DeclarationsController : BaseApiController
     /// <returns>DTO with thesis data for declaration</returns>
     /// <response code="200">Returns a DTO with thesis data for declaration</response>
     [HttpGet]
-    [Authorize(Roles = Role.StudentRole)]
+    [Authorize(Roles = Role.Student)]
     public Task<DeclarationDataDto> GetDataForDeclaration([FromQuery] long ThesisId, CancellationToken cancellationToken)
     {
         string email = GetUserEmail();

@@ -40,7 +40,6 @@ namespace Infrastructure.AWS
             {
                 var response = await _amazonS3Client.GetObjectAsync(request).ConfigureAwait(false);
                 new FileExtensionContentTypeProvider().TryGetContentType(response.Key, out var contentType);
-                if (!string.Equals(contentType, "application/pdf", StringComparison.Ordinal)) throw new AmazonException("Wrong thesis content type");
                 return response.ResponseStream;
             }
             catch (Exception ex)

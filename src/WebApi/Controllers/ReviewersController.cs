@@ -49,7 +49,7 @@ public class ReviewersController : BaseApiController
     /// <response code="200">Returns all assigned theses grouped by field of study and year of defence</response>
     [HttpGet]
     [Route("getMyReviews")]
-    [Authorize(Roles = Role.TutorRole)]
+    [Authorize(Roles = Role.Tutor)]
     public Task<IEnumerable<FieldOfStudyInitialTableDto<ReviewersThesisDto>>> GetThesesForReview(CancellationToken cancellationToken)
     {
         string email = GetUserEmail();
@@ -69,7 +69,7 @@ public class ReviewersController : BaseApiController
     /// <response code="200">Found theses whose reviewer is the requesting user</response>
     [HttpGet]
     [Route("getMyReviewsPage")]
-    [Authorize(Roles = Role.TutorRole)]
+    [Authorize(Roles = Role.Tutor)]
     public Task<PagedResultDto<ReviewersThesisDto>> GetTopicsForTutorPage(
         [FromQuery] long fieldOfStudyId, [FromQuery] string yearOfDefence, [FromQuery] int page = DefaultPage,
         [FromQuery] int pageSize = DefaultPageSize, CancellationToken cancellationToken = default)
@@ -89,7 +89,7 @@ public class ReviewersController : BaseApiController
     /// <response code="200">Returns DTO with initial data for review</response>
     [HttpGet]
     [Route("getDataForReview")]
-    [Authorize(Roles = Role.TutorRole)]
+    [Authorize(Roles = Role.Tutor)]
     public Task<ReviewDataDto> GetDataForReview([FromQuery] long ThesisId, CancellationToken cancellationToken)
     {
         string userEmail = GetUserEmail();

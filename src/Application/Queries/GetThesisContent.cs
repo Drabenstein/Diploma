@@ -16,7 +16,7 @@ public static class GetThesisContent
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
         private const string CloudCredentialsQuery =
-            @" SELECT cloud_bucket AS Bucket, cloud_key AS Key
+            @" SELECT cloud_bucket AS CloudBucket, cloud_key AS CloudKey
                     FROM thesis
                     WHERE thesis_id = :ThesisId
             ";
@@ -41,6 +41,7 @@ public static class GetThesisContent
 
             var memoryStream = new MemoryStream();
             await fileResponse.CopyToAsync(memoryStream).ConfigureAwait(false);
+            memoryStream.Position = 0;
             return memoryStream;
         }
     }

@@ -2,8 +2,8 @@
 {
     public static class Role
     {
-        public const string StudentRole = "student";
-        public const string TutorRole = "tutor";
+        public const string Student = "student";
+        public const string Tutor = "tutor";
         public const string ProgramCommittee = "program-committee";
     }
 }

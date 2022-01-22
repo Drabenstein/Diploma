@@ -1,13 +1,9 @@
-﻿using Application.Common;
-using Core;
-using Core.Models.Theses;
+﻿using Core.Models.Theses;
 using Core.Models.Topics.ValueObjects;
 using Core.Models.Users;
-using Dapper;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using CoreTopics = Core.Models.Topics;
 
 namespace Application.Commands.Applications;
@@ -59,15 +55,15 @@ public static class ConfirmApplication
             topic.ConfirmApplication(applicationToConfirm.Id);
 
             var thesis = topic.Theses.Last();
+
             await _dbContext.Set<Thesis>().AddAsync(thesis).ConfigureAwait(false);
 
-            //foreach (var topicToCancelApplication in student.Applications.Select(x => x.Topic))
-            //{
-            //    var applicationToCancelId =
-            //        topicToCancelApplication.Applications.First(a => a.Submitter.Email == request.StudentEmail)
-            //            .Id;
-            //    topicToCancelApplication.CancelApplication(applicationToCancelId);
-            //}
+            foreach (var application in student.Applications.Where(x => x.Id != applicationToConfirm.Id 
+            && x.Topic.YearOfDefence == topic.YearOfDefence && x.Topic.FieldOfStudy.Id == topic.FieldOfStudy.Id 
+            && (x.Status == ApplicationStatus.Sent || x.Status == ApplicationStatus.Approved)))
+            {
+                application.CancelApplication();
+            }
 
             await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
             return true;

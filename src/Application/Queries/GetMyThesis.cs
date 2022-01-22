@@ -1,4 +1,4 @@
-﻿using Application.Common;
+using Application.Common;
 using Application.Queries.Dtos;
 using Core.Models.Theses;
 using Core.Models.Users;

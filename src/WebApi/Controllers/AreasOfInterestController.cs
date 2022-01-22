@@ -24,7 +24,7 @@ public class AreasOfInterestController : BaseApiController
     /// <response code="200"></response>
     [HttpGet]
     [Route("getAreasOfInterest")]
-    [Authorize(Roles = Role.ProgramCommittee + "," + Role.TutorRole)]
+    [Authorize(Roles = Role.ProgramCommittee + "," + Role.Tutor)]
     public Task<IEnumerable<AreaOfInterestDto>> GetAllAreasOfInterest(CancellationToken cancellationToken)
     {
         return _mediator.Send(new GetAllAreasOfInterest.Query(), cancellationToken);

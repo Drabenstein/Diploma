@@ -28,7 +28,7 @@ public class TopicsController : BaseApiController
     /// <returns>All topics grouped by field of study and year of defence</returns>
     /// <response code="200">Returns all topics grouped by field of study and year of defence</response>
     [HttpGet]
-    [Authorize(Roles = Role.StudentRole + "," + Role.TutorRole)]
+    [Authorize(Roles = Role.Student + "," + Role.Tutor)]
     public Task<IEnumerable<FieldOfStudyInitialTableDto<StudentsTopicDto>>> GetAllTopicsAsync(CancellationToken cancellationToken)
     {
         return _mediator.Send(new GetAllTopics.Query(), cancellationToken);
@@ -42,7 +42,7 @@ public class TopicsController : BaseApiController
     /// <response code="200">Returns all topics grouped by field of study and year of defence</response>
     [HttpGet]
     [Route("topicsForTutor")]
-    [Authorize(Roles = Role.TutorRole)]
+    [Authorize(Roles = Role.Tutor)]
     public Task<IEnumerable<FieldOfStudyInitialTableDto<TutorsTopicDto>>> GetTutorsTopics(CancellationToken cancellationToken)
     {
         string email = GetUserEmail();
@@ -61,7 +61,7 @@ public class TopicsController : BaseApiController
     /// <response code="200">Found topics</response>
     [HttpGet]
     [Route("topicsPage")]
-    [Authorize(Roles = Role.StudentRole + "," + Role.TutorRole)]
+    [Authorize(Roles = Role.Student + "," + Role.Tutor)]
     public Task<PagedResultDto<StudentsTopicDto>> GetTopicsPage(
         [FromQuery] long fieldOfStudyId, [FromQuery] string yearOfDefence, [FromQuery] int page = DefaultPage,
         [FromQuery] int pageSize = DefaultPageSize, CancellationToken cancellationToken = default)
@@ -84,7 +84,7 @@ public class TopicsController : BaseApiController
     /// <response code="200">Found topics for tutor</response>
     [HttpGet]
     [Route("topicsForTutorPage")]
-    [Authorize(Roles = Role.TutorRole)]
+    [Authorize(Roles = Role.Tutor)]
     public Task<PagedResultDto<TutorsTopicDto>> GetTopicsForTutorPage(
         [FromQuery] long fieldOfStudyId, [FromQuery] string yearOfDefence, [FromQuery] int page = DefaultPage,
         [FromQuery] int pageSize = DefaultPageSize, CancellationToken cancellationToken = default)
@@ -107,7 +107,7 @@ public class TopicsController : BaseApiController
     /// <param name="PolishName">Name of the topic in polish</param>
     /// <response code="200">Application was added</response>
     [HttpPost]
-    [Authorize(Roles = Role.StudentRole)]
+    [Authorize(Roles = Role.Student)]
     public Task ProposeTopic([FromQuery] long TutorId, [FromQuery] long FieldOfStudyId,
         [FromQuery] int MaxRealizationNumber, [FromQuery] string PolishName, [FromQuery] string EnglishName,
         [FromQuery] string Message, CancellationToken cancellationToken)
@@ -123,7 +123,7 @@ public class TopicsController : BaseApiController
     /// <response code="200">Returns a list of possible thesis supervisors</response>
     [HttpGet]
     [Route("possibleTutors")]
-    [Authorize(Roles = Role.StudentRole)]
+    [Authorize(Roles = Role.Student)]
     public Task<IEnumerable<TutorForApplicationDto>> GetTutorsForApplication(CancellationToken cancellationToken)
     {
         return _mediator.Send(new GetTutorsForApplication.Query(), cancellationToken);
@@ -136,7 +136,7 @@ public class TopicsController : BaseApiController
     /// <response code="200">Returns a list of current student's fields of study</response>
     [HttpGet]
     [Route("possibleFieldsOfStudy")]
-    [Authorize(Roles = Role.StudentRole)]
+    [Authorize(Roles = Role.Student)]
     public Task<IEnumerable<FieldOfStudyForApplicationDto>> GetFieldsOfStudyForApplication(CancellationToken cancellationToken)
     {
         string email = GetUserEmail();
@@ -152,7 +152,7 @@ public class TopicsController : BaseApiController
     /// <response code="200">Application was added</response>
     [HttpPost]
     [Route("applyForTopic")]
-    [Authorize(Roles = Role.StudentRole)]
+    [Authorize(Roles = Role.Student)]
     public Task ApplyForTopic([FromQuery] long TopicId, string Message, CancellationToken cancellationToken)
     {
         string email = GetUserEmail();
@@ -168,7 +168,7 @@ public class TopicsController : BaseApiController
     /// <response code="200">Topic was added</response>
     [HttpPost]
     [Route("createTopic")]
-    [Authorize(Roles = Role.TutorRole)]
+    [Authorize(Roles = Role.Tutor)]
     public Task CreateTopic([FromBody] CreateTopicDto dto, CancellationToken cancellationToken)
     {
         string email = GetUserEmail();
@@ -185,7 +185,7 @@ public class TopicsController : BaseApiController
     /// <response code="200">Student's approved topics</response>
     [HttpGet]
     [Route("myAcceptedTopics")]
-    [Authorize(Roles = Role.StudentRole)]
+    [Authorize(Roles = Role.Student)]
     public Task<IEnumerable<ApprovedTopicDto>> GetMyApprovedTopics(CancellationToken cancellationToken)
     {
         string email = GetUserEmail();
@@ -278,5 +278,50 @@ public class TopicsController : BaseApiController
         await _mediator.Send(new BulkRejectTopics.Command(topicsIds), cancellationToken);
         return Ok();
     }
+
+    /// <summary>
+    /// Gets fields of studies with paged topics which are accepted for current user
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("students-approved-topics")]
+    [Authorize(Roles = Role.Student)]
+    [ProducesResponseType(typeof(IEnumerable<FieldOfStudyInitialTableDto<TopicForConsiderationDto>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    public Task<IEnumerable<FieldOfStudyInitialTableDto<StudentsApprovedTopicDto>>>
+    GetStudentsAcceptedTopicsAsync(CancellationToken cancellationToken)
+    {
+        var email = GetUserEmail();
+        return _mediator.Send(new GetStudentsApprovedTopicsAsync.Query(email), cancellationToken);
+    }
+
+    /// <summary>
+    /// Gets page of theses open to assign a reviewer for specific field of study id and year of defence
+    /// </summary>
+    /// <param name="fieldOfStudyId">Field of study id</param>
+    /// <param name="yearOfDefence">Year of defence</param>
+    /// <param name="page">Page</param>
+    /// <param name="pageSize">Maximum items per page</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("students-approved-topics-by-year-and-field")]
+    [Authorize(Roles = Role.Student)]
+    [ProducesResponseType(typeof(PagedResultDto<StudentsApprovedTopicDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    public Task<PagedResultDto<StudentsApprovedTopicDto>>
+        GetThesesForReviewerAssignmentAsync([FromQuery] long fieldOfStudyId, [FromQuery] string yearOfDefence,
+            [FromQuery] int page = DefaultPage,
+            [FromQuery] int pageSize = DefaultPageSize, CancellationToken cancellationToken = default)
+    {
+        var email = GetUserEmail();
+        return _mediator.Send(
+            new GetStudentsApprovedTopicsForFieldAndYearAsync.Query(email, fieldOfStudyId, yearOfDefence, page,
+                pageSize), cancellationToken);
+    }
+
 }
 

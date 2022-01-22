@@ -27,7 +27,7 @@ public class ApplicationsController : BaseApiController
     /// <response code="200">Returns found field of studies with paged applications</response>
     [HttpGet]
     [Route("initial-by-field")]
-    [Authorize(Roles = Role.TutorRole)]
+    [Authorize(Roles = Role.Tutor)]
     public Task<IEnumerable<FieldOfStudyInitialTableDto<ApplicationDto>>> GetApplicationsInitialTableAsync(
         CancellationToken cancellationToken)
     {
@@ -48,7 +48,7 @@ public class ApplicationsController : BaseApiController
     /// <response code="409">Action cannot be permitted</response>
     /// <response code="422">Validation of the request failed</response>
     [HttpGet]
-    [Authorize(Roles = Role.TutorRole)]
+    [Authorize(Roles = Role.Tutor)]
     [ProducesResponseType(typeof(PagedResultDto<ApplicationDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
@@ -74,7 +74,7 @@ public class ApplicationsController : BaseApiController
     /// <response code="422">Validation of the request failed</response>
     [HttpPost]
     [Route("{applicationId}/accept")]
-    [Authorize(Roles = Role.TutorRole)]
+    [Authorize(Roles = Role.Tutor)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -98,7 +98,7 @@ public class ApplicationsController : BaseApiController
     /// <response code="422">Validation of the request failed</response>
     [HttpPost]
     [Route("{applicationId}/reject")]
-    [Authorize(Roles = Role.TutorRole)]
+    [Authorize(Roles = Role.Tutor)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -122,7 +122,7 @@ public class ApplicationsController : BaseApiController
     /// <response code="422">Validation of the request failed</response>
     [HttpPost]
     [Route("{applicationId}/confirm")]
-    [Authorize(Roles = Role.StudentRole)]
+    [Authorize(Roles = Role.Student)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -146,7 +146,7 @@ public class ApplicationsController : BaseApiController
     /// <response code="422">Validation of the request failed</response>
     [HttpPost]
     [Route("{applicationId}/cancel")]
-    [Authorize(Roles = Role.StudentRole)]
+    [Authorize(Roles = Role.Student)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -169,7 +169,7 @@ public class ApplicationsController : BaseApiController
     /// <response code="422">Validation of the request failed</response>
     [HttpGet]
     [Route("{applicationId}")]
-    [Authorize(Roles = $"{Role.TutorRole},{Role.TutorRole}")]
+    [Authorize(Roles = $"{Role.Tutor},{Role.Tutor}")]
     [ProducesResponseType(typeof(ApplicationDetailsDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]

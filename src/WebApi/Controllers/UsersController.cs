@@ -38,7 +38,7 @@ public class UsersController : BaseApiController
     /// <response code="200">Returns student's personal data</response>
     [HttpGet]
     [Route("myData/student")]
-    [Authorize(Roles = Role.StudentRole)]
+    [Authorize(Roles = Role.Student)]
     public Task<IEnumerable<StudentDataDto>> GetStudentData(CancellationToken cancellationToken)
     {
         string email = GetUserEmail();
@@ -53,7 +53,7 @@ public class UsersController : BaseApiController
     /// <response code="200">Returns tutor's personal data</response>
     [HttpGet]
     [Route("myData/tutor")]
-    [Authorize(Roles = Role.TutorRole)]
+    [Authorize(Roles = Role.Tutor)]
     public Task<TutorDataDto> GetStudGetTutorDataentData(CancellationToken cancellationToken)
     {
         string email = GetUserEmail();
@@ -69,7 +69,7 @@ public class UsersController : BaseApiController
     /// <response code="200"></response>
     [HttpPost]
     [Route("myData/updateAreasOfInterest")]
-    [Authorize(Roles = Role.TutorRole)]
+    [Authorize(Roles = Role.Tutor)]
     public async Task<IActionResult> UpdateAreasOfInterest([FromBody] long[] AreasOfInterestIds, CancellationToken cancellationToken)
     {
         string email = GetUserEmail();
