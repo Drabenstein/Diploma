@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using Application.ExternalServices;
+﻿using Application.ExternalServices;
 using Auth0.AuthenticationApi;
 
 namespace Infrastructure.Auth0;

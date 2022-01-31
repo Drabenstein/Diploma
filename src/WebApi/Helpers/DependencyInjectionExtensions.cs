@@ -43,12 +43,15 @@ public static class DependencyInjectionExtensions
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
     }
     
-    public static void AddHttpContextServices(this IServiceCollection services, IConfiguration configuration)
+    public static void AddAuth0Services(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddHttpContextAccessor();
         services.AddScoped<IContextAccessor, HttpContextAccessor>();
         services.AddScoped<IUserDataFetcher, Auth0UserDataFetcher>();
         services.AddScoped<IAuthenticationApiClient>(_ => new AuthenticationApiClient(configuration["Auth0:Domain"]));
+        
+        services.Configure<Auth0ApiConfig>(configuration.GetSection(Auth0ApiConfig.ConfigKey));
+        services.AddScoped<IUserService, Auth0UserService>();
     }
     
     public static void AddAuth0Authentication(this IServiceCollection services, IConfiguration configuration)
@@ -84,15 +87,11 @@ public static class DependencyInjectionExtensions
             });
     }
 
-    public static void AddAmazonClients(this IServiceCollection services)
+    public static void AddAmazonServices(this IServiceCollection services)
     {
         services.AddScoped(_ => new AmazonS3Client(RegionEndpoint.USEast1));
         services.AddScoped(_ => new AmazonTranslateClient(RegionEndpoint.USEast1));
         services.AddScoped(_ => new AmazonComprehendClient(RegionEndpoint.USEast1));
-    }
-
-    public static void AddAmazonServices(this IServiceCollection services)
-    {
         services.AddScoped<ITranslationService, TranslationService>();
         services.AddScoped<IS3Service, S3Service>();
         services.AddScoped<IComprehendService, ComprehendService>();

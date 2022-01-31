@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Common;
+using WebApi.Controllers.Requests;
 
 namespace WebApi.Controllers;
 
@@ -74,6 +75,25 @@ public class UsersController : BaseApiController
     {
         string email = GetUserEmail();
         await _mediator.Send(new UpdateTutorAreasOfInterest.Command(AreasOfInterestIds, email), cancellationToken);
+        return Ok();
+    }
+
+    /// <summary>
+    /// Changes logged-in user password
+    /// </summary>
+    /// <param name="changePasswordRequest">Object with new password provided</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpPut]
+    [Route("changePassword")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(StatusCodes.Status502BadGateway)]
+    public async Task<IActionResult> ChangePasswordAsync([FromBody] ChangePasswordRequest changePasswordRequest, CancellationToken cancellationToken)
+    {
+        var userId = GetUserId();
+        await _mediator.Send(new ChangePassword.Command(userId, changePasswordRequest.Password), cancellationToken);
         return Ok();
     }
 }

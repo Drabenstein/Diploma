@@ -6,15 +6,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c => c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "swagger", Version = "v1" }));
 builder.Services.AddCommandQueries();
-builder.Services.AddAmazonClients();
 builder.Services.AddCaching();
 builder.Services.AddCorsConfig(builder.Configuration);
 
 string connectionString = builder.Configuration.GetConnectionString("DiplomaDb");
 builder.Services.AddDatabaseServices(connectionString);
-builder.Services.AddAmazonClients();
 builder.Services.AddAmazonServices();
-builder.Services.AddHttpContextServices(builder.Configuration);
+builder.Services.AddAuth0Services(builder.Configuration);
 builder.Services.AddAuth0Authentication(builder.Configuration);
 
 var app = builder.Build();
