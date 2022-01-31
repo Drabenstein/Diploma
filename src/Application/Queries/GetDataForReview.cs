@@ -1,4 +1,5 @@
-﻿using Application.Queries.Dtos;
+﻿using Application.Common;
+using Application.Queries.Dtos;
 using Core.Models.Theses;
 using Core.Models.Users;
 using FluentValidation;
@@ -38,7 +39,7 @@ public static class GetDataForReview
                     {
                         Id = y.Id,
                         Name = y.Name,
-                        Type = y.Type
+                        Type = y.Type.ToString()
                     }).ToList()
                 }).FirstAsync(cancellationToken).ConfigureAwait(false);
         }

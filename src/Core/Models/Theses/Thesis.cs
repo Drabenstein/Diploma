@@ -69,4 +69,17 @@ public record Thesis : EntityBase
             throw new InvalidOperationException("Thesis can only be declared as ready for review when it is in progress");
         }
     }
+
+    public void ReviewThesis()
+    {
+        if (Status == ThesisStatus.ReadyToReview || Status == ThesisStatus.Reviewed)
+        {
+            Status = ThesisStatus.Reviewed;
+        }
+        else
+        {
+            throw new InvalidOperationException("Thesis can only be reviewed when it is ready to be reviewed or already reviewed by another reviewer");
+        }
+    }
+
 }

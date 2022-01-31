@@ -15,7 +15,8 @@ public record Review : EntityBase
 
     public Review(Tutor reviewer)
     {
-        this.Reviewer = reviewer;
+        Reviewer = reviewer;
+        AddDefaultReviewModules();
     }
     
     public Tutor Reviewer { get; set; }
@@ -23,4 +24,32 @@ public record Review : EntityBase
     public bool IsPublished { get; set; }
     public DateTime? PublishTimestamp { get; set; }
     public virtual IReadOnlyCollection<ReviewModule> ReviewModules => _reviewModules.AsReadOnly();
+
+    private void AddDefaultReviewModules()
+    {
+        foreach(var module in DefaultReviewModules.GetModuleTemplates())
+        {
+            _reviewModules.Add(new ReviewModule
+            {
+                Name = module.Name,
+                Type = module.Type,
+                Value = module.Value
+            });
+        }
+    }
+
+    public void SetGrade(string grade)
+    {
+        Grade = grade switch
+        {
+            "2" => ValueObjects.Grade.Two,
+            "3" => ValueObjects.Grade.Three,
+            "3.5" => ValueObjects.Grade.ThreeAndHalf,
+            "4" => ValueObjects.Grade.Four,
+            "4.5" => ValueObjects.Grade.FourAndHalf,
+            "5" => ValueObjects.Grade.Five,
+            "5.5" => ValueObjects.Grade.FiveAndHalf,
+            _ => throw new InvalidOperationException($"Only grades from range [2, 3, 3.5, 4, 4.5, 5, 5.5] can be assigned")
+        };
+    }
 }

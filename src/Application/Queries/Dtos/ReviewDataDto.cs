@@ -1,4 +1,6 @@
-﻿namespace Application.Queries.Dtos;
+﻿using Application.Common;
+
+namespace Application.Queries.Dtos;
 
 public class ReviewDataDto
 {

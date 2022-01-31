@@ -1,4 +1,6 @@
-﻿using Application.Common;
+﻿using Application.Commands;
+using Application.Commands.Dtos;
+using Application.Common;
 using Application.Queries;
 using Application.Queries.Dtos;
 using MediatR;
@@ -94,6 +96,24 @@ public class ReviewersController : BaseApiController
     {
         string userEmail = GetUserEmail();
         return _mediator.Send(new GetDataForReview.Query(userEmail, ThesisId), cancellationToken);
+    }
+
+    /// <summary>
+    /// Posts tutor's thesis review 
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <param name="ReviewId">Id of the thesis review</param>
+    /// <response code="200">Post successful</response>
+    [HttpPost]
+    [Route("postReview")]
+    [Authorize(Roles = Role.Tutor)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    public Task PostReview([FromBody] PostReviewDto dto, CancellationToken cancellationToken)
+    {
+        string userEmail = GetUserEmail();
+        return _mediator.Send(new PostReview.Command(userEmail, dto.ReviewModules, dto.ReviewId, dto.Grade), cancellationToken);
     }
 
 }
