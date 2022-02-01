@@ -19,7 +19,7 @@ public class Auth0UserService : IUserService
     public async Task ChangePasswordAsync(string userExternalId, string password)
     {
         var accessToken = await GetApiTokenAsync().ConfigureAwait(false);
-        var managementClient = new ManagementApiClient(accessToken, _apiConfigSnapshot.Value.Auth0Domain);
+        var managementClient = new ManagementApiClient(accessToken, new Uri(_apiConfigSnapshot.Value.Audience));
         var passwordChangeRequest = new UserUpdateRequest
         {
             Password = password
