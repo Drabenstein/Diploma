@@ -151,4 +151,21 @@ public class ThesesController : BaseApiController
         await _mediator.Send(new BulkChangeReviewers.Command(reviewerChangeDtos), cancellationToken);
         return Ok();
     }
+
+    /// <summary>
+    /// Declare specified thesis as ready for review
+    /// </summary>
+    /// <param name="ThesisId">Id of thesis to declare as ready for review</param>
+    /// <param name="cancellationToken"></param>
+    [HttpPut]
+    [Route("declare-thesis-ready-for-review")]
+    [Authorize(Roles = Role.Student)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    public Task DeclareThesisReadyForReview([FromQuery] int ThesisId, CancellationToken cancellationToken)
+    {
+        var Email = GetUserEmail();
+        return _mediator.Send(new DeclareThesisReadyForReview.Command(Email, ThesisId), cancellationToken);
+    }
 }

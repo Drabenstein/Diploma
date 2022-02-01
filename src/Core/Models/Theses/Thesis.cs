@@ -57,4 +57,16 @@ public record Thesis : EntityBase
             _reviews.Add(review);
         }
     }
+
+    public void DeclareAsReadyForReview()
+    {
+        if (Status == ThesisStatus.InProgress)
+        {
+            Status = ThesisStatus.ReadyToReview;
+        }
+        else
+        {
+            throw new InvalidOperationException("Thesis can only be declared as ready for review when it is in progress");
+        }
+    }
 }
