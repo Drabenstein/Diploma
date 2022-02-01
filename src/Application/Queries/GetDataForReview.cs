@@ -1,6 +1,7 @@
 ﻿using Application.Queries.Dtos;
 using Core.Models.Theses;
 using Core.Models.Users;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -40,6 +41,15 @@ public static class GetDataForReview
                         Type = y.Type
                     }).ToList()
                 }).FirstAsync(cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    public class Validator : AbstractValidator<Query>
+    {
+        public Validator()
+        {
+            RuleFor(x => x.Email).EmailAddress();
+            RuleFor(x => x.ThesisId).GreaterThan(0);
         }
     }
 }

@@ -34,7 +34,6 @@ public static class GetAllTopicsForTutorForFieldOfStudyAndYear
         public async Task<PagedResultDto<TutorsTopicDto>> Handle(Query request, CancellationToken cancellationToken)
         {
             using var connection = await _sqlConnectionFactory.CreateOpenConnectionAsync().ConfigureAwait(false);
-            
             var tutorId = await connection.QuerySingleAsync<long>(TutorIdSql, new { Email = request.Email}).ConfigureAwait(false);
 
             var results =

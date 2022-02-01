@@ -153,6 +153,23 @@ public class ThesesController : BaseApiController
     }
 
     /// <summary>
+    /// Returns user's all theses data
+    /// </summary>
+    /// <returns>User's theses data</returns>
+    /// <response code="200">Returns user's all theses data</response>
+    [HttpGet]
+    [Route("students-theses")]
+    [Authorize(Roles = Role.Student)]
+    [ProducesResponseType(typeof(IEnumerable<StudentsThesisDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    public Task<IEnumerable<StudentsThesisDto>> GetStudentsTheses(CancellationToken cancellationToken)
+    {
+        var email = GetUserEmail();
+        return _mediator.Send(new GetStudentsTheses.Query(email), cancellationToken);
+    }
+
+    /// <summary>
     /// Declare specified thesis as ready for review
     /// </summary>
     /// <param name="ThesisId">Id of thesis to declare as ready for review</param>
