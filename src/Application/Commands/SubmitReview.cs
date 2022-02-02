@@ -7,7 +7,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Commands;
-public static class PostReview
+public static class SubmitReview
 {
     public record Command(string userEmail, FilledReviewModuleDto[] ReviewModules, int ReviewId, string Grade) : IRequest<Unit>;
 
@@ -55,16 +55,17 @@ public static class PostReview
 
             if (thesis is null)
             {
-                throw new InvalidOperationException("No thesis found for upload review");
+                throw new InvalidOperationException("No thesis found to add review");
             }
 
-            request.ReviewModules.ToList()
-                .ForEach(dtoModule => reviewModules.FirstOrDefault(x => x.Id == dtoModule.Id)?.SetValue(dtoModule.Value));
+            foreach (var module in request.ReviewModules)
+            {
+                reviewModules.FirstOrDefault(x => x.Id == module.Id)?.SetValue(module.Value);
+            }
 
-            review.SetGrade(request.Grade);
-            review.PublishTimestamp = DateTime.UtcNow;
+            review.SubmitGrade(request.Grade);
 
-            thesis.ReviewThesis();
+            thesis.ReviewThesis(request.Grade, request.ReviewId);
 
             await _dbContext.SaveChangesAsync().ConfigureAwait(false);
 

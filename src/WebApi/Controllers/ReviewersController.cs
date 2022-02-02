@@ -110,10 +110,10 @@ public class ReviewersController : BaseApiController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-    public Task PostReview([FromBody] PostReviewDto dto, CancellationToken cancellationToken)
+    public Task PostReview([FromBody] SubmitReviewDto dto, CancellationToken cancellationToken)
     {
         string userEmail = GetUserEmail();
-        return _mediator.Send(new PostReview.Command(userEmail, dto.ReviewModules, dto.ReviewId, dto.Grade), cancellationToken);
+        return _mediator.Send(new SubmitReview.Command(userEmail, dto.ReviewModules, dto.ReviewId, dto.Grade), cancellationToken);
     }
 
 }

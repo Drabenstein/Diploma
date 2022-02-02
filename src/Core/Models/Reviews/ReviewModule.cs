@@ -10,11 +10,9 @@ public record ReviewModule : EntityBase
     public ReviewModuleType Type { get; set; }
     public void SetValue(string value)
     {
-        if (Type == ReviewModuleType.Number)
+        if (Type == ReviewModuleType.Number && !double.TryParse(value, out var _))
         {
-            var parsed = double.TryParse(value, out var _);
-            if (parsed) Value = value;
-            else throw new InvalidOperationException($"Cannot assign such grade: {value}");
+            throw new InvalidOperationException($"Cannot assign such grade: {value}");
         }
         Value = value;
     }

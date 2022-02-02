@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DiplomaDbContext))]
-    [Migration("20220131204148_change_review_type_to_enum")]
-    partial class change_review_type_to_enum
+    [Migration("20220202132011_ChangeReviewModuleToEnum")]
+    partial class ChangeReviewModuleToEnum
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -102,8 +102,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("review_id");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("integer")
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text")
                         .HasColumnName("type");
 
                     b.Property<string>("Value")

@@ -1,61 +1,66 @@
 ﻿namespace Core.Models.Reviews.ValueObjects;
 public static class DefaultReviewModules
 {
+    private const string Purpose = "Cel i zakres pracy";
+    private const string Structure = "Struktura pracy";
+    private const string Design = "Część analityczno projektowa";
+    private const string Sources = "Źródła i redakcja pracy";
+    private const string Assessment = "Ocena";
     public static IEnumerable<ReviewModuleTemplate> GetModuleTemplates()
     {
         return new List<ReviewModuleTemplate>()
         {
             new ReviewModuleTemplate
             {
-                Name = "Cel i zakres pracy",
+                Name = Purpose,
                 Type = ReviewModuleType.Text,
                 Value = ""
             },
             new ReviewModuleTemplate
             {
-                Name = "Cel i zakres pracy",
+                Name = Purpose,
                 Type = ReviewModuleType.Number,
                 Value = ""
             },
             new ReviewModuleTemplate
             {
-                Name = "Struktura pracy",
+                Name = Structure,
                 Type = ReviewModuleType.Text,
                 Value = ""
             },
             new ReviewModuleTemplate
             {
-                Name = "Struktura pracy",
+                Name = Structure,
                 Type = ReviewModuleType.Number,
                 Value = ""
             },
             new ReviewModuleTemplate
             {
-                Name = "Część analityczno projektowa",
+                Name = Design,
                 Type = ReviewModuleType.Text,
                 Value = ""
             },
             new ReviewModuleTemplate
             {
-                Name = "Część analityczno projektowa",
-                Type = ReviewModuleType.Number,
-                Value = ""
-            },
-             new ReviewModuleTemplate
-            {
-                Name = "Źródła i redakcja pracy",
-                Type = ReviewModuleType.Text,
-                Value = ""
-            },
-            new ReviewModuleTemplate
-            {
-                Name = "Źródła i redakcja pracy",
+                Name = Design,
                 Type = ReviewModuleType.Number,
                 Value = ""
             },
              new ReviewModuleTemplate
             {
-                Name = "Ocena",
+                Name = Sources,
+                Type = ReviewModuleType.Text,
+                Value = ""
+            },
+            new ReviewModuleTemplate
+            {
+                Name = Sources,
+                Type = ReviewModuleType.Number,
+                Value = ""
+            },
+             new ReviewModuleTemplate
+            {
+                Name = Assessment,
                 Type = ReviewModuleType.Number,
                 Value = ""
             }

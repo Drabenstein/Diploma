@@ -38,8 +38,10 @@ public record Review : EntityBase
         }
     }
 
-    public void SetGrade(string grade)
+    public void SubmitGrade(string grade)
     {
+        if (Grade is not null) throw new InvalidOperationException("This review was already graded");
+
         Grade = grade switch
         {
             "2" => ValueObjects.Grade.Two,
@@ -51,5 +53,9 @@ public record Review : EntityBase
             "5.5" => ValueObjects.Grade.FiveAndHalf,
             _ => throw new InvalidOperationException($"Only grades from range [2, 3, 3.5, 4, 4.5, 5, 5.5] can be assigned")
         };
+
+        PublishTimestamp = DateTime.UtcNow;
+
+        IsPublished = true;
     }
 }

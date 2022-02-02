@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.Commands.Dtos;
-public class PostReviewDto
+public class SubmitReviewDto
 {
     public int ReviewId { get; set; }
     public FilledReviewModuleDto[] ReviewModules { get; set; }

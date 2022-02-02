@@ -100,8 +100,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("review_id");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("integer")
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text")
                         .HasColumnName("type");
 
                     b.Property<string>("Value")

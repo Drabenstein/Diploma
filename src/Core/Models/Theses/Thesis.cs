@@ -70,11 +70,17 @@ public record Thesis : EntityBase
         }
     }
 
-    public void ReviewThesis()
+    public void ReviewThesis(string grade, int reviewId)
     {
         if (Status == ThesisStatus.ReadyToReview || Status == ThesisStatus.Reviewed)
         {
             Status = ThesisStatus.Reviewed;
+
+            var review = Reviews.FirstOrDefault(x => x.Id == reviewId);
+
+            if (review is null) throw new InvalidOperationException("Submitted review does not correspond to this thesis");
+
+            review.SubmitGrade(grade);
         }
         else
         {

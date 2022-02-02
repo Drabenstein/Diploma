@@ -25,6 +25,7 @@ public class ReviewModuleEntityConfiguration : IEntityTypeConfiguration<ReviewMo
 
         builder.Property(x => x.Type)
             .HasColumnNameSnakeCased()
+            .HasConversion<string?>()
             .IsRequired();
     }
 }
