@@ -185,4 +185,22 @@ public class ThesesController : BaseApiController
         var Email = GetUserEmail();
         return _mediator.Send(new DeclareThesisReadyForReview.Command(Email, ThesisId), cancellationToken);
     }
+
+    /// <summary>
+    /// Get selected review's data for student to display
+    /// </summary>
+    /// <param name="ReviewId">Id of the selected review</param>
+    /// <param name="cancellationToken"></param>
+    /// <returns>Returns review and it's modules data for student to display</returns>
+    [HttpGet]
+    [Route("students-review-display")]
+    [Authorize(Roles = Role.Student)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    public Task<StudentsReviewDataDto> GetStudentsReviewDisplay([FromQuery] int ReviewId, CancellationToken cancellationToken) 
+    {
+        var Email = GetUserEmail();
+        return _mediator.Send(new GetStudentsReviewDisplay.Query(Email, ReviewId), cancellationToken);
+    }
 }
