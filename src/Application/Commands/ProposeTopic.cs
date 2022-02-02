@@ -22,15 +22,18 @@ public static class ProposeTopic
         {
             var user = await _dbContext.Set<Student>().FirstOrDefaultAsync(x => x.Email == request.UserEmail).ConfigureAwait(false);
 
+            var supervisor = await _dbContext.Set<Tutor>().FirstOrDefaultAsync(x => x.Id == request.TutorId).ConfigureAwait(false);
+
             var fieldOfStudy = await _dbContext.Set<FieldOfStudy>().FirstOrDefaultAsync(x => x.Id == request.FieldOfStudyId).ConfigureAwait(false);
 
             var studentFieldOfStudy = await _dbContext.Set<StudentFieldOfStudy>().FirstOrDefaultAsync(x => x.StudentId == user.Id && x.FieldOfStudyId == fieldOfStudy.Id).ConfigureAwait(false);
 
-            if (user == null || fieldOfStudy == null || studentFieldOfStudy == null) throw new InvalidOperationException("Application cannot be created with given data");
+            if (user is null || fieldOfStudy is null || studentFieldOfStudy is null || supervisor is null) throw new InvalidOperationException("Application cannot be created with given data");
 
             var topic = new Topic
             {
                 Proposer = user,
+                Supervisor = supervisor,
                 IsProposedByStudent = true,
                 MaxRealizationNumber = request.MaxRealizationNumber,
                 FieldOfStudy = fieldOfStudy,
@@ -45,7 +48,7 @@ public static class ProposeTopic
             {
                 Submitter = user,
                 Topic = topic,
-                Timestamp = DateTime.Now,
+                Timestamp = DateTime.UtcNow,
                 Message = request.Message,
                 IsTopicProposal = true
             };
