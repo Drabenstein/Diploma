@@ -56,7 +56,7 @@ public class ThesesController : BaseApiController
     /// <response code="200">Returns found field of studies with paged supervised theses</response>
     [HttpGet]
     [Route("supervised-by-field")]
-    [Authorize(Roles = Role.Tutor)]
+    [Authorize(Roles = Role.ProgramCommittee)]
     public Task<IEnumerable<FieldOfStudyInitialTableDto<SupervisedThesisDto>>> GetSupervisedByFieldAsync(
         CancellationToken cancellationToken)
     {
@@ -77,7 +77,7 @@ public class ThesesController : BaseApiController
     /// <response code="422">Invalid parameters have been passed to request</response>
     [HttpGet]
     [Route("supervised")]
-    [Authorize(Roles = Role.Tutor)]
+    [Authorize(Roles = Role.ProgramCommittee)]
     public Task<PagedResultDto<SupervisedThesisDto>> GetSupervisedAsync(
         [FromQuery] long fieldOfStudyId, [FromQuery] string yearOfDefence, [FromQuery] int page = DefaultPage,
         [FromQuery] int pageSize = DefaultPageSize, CancellationToken cancellationToken = default)

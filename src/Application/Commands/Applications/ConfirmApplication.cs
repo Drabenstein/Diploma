@@ -28,6 +28,7 @@ public static class ConfirmApplication
                 .Include(x => x.Theses)
                 .Include(x => x.Applications)
                 .ThenInclude(a => a.Submitter)
+                .Include(x => x.Supervisor)
                 .SingleOrDefaultAsync(x => x.Applications.Any(a =>
                         a.Id == request.ApplicationId && a.Submitter.Email == request.StudentEmail),
                     cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -55,6 +56,8 @@ public static class ConfirmApplication
             topic.ConfirmApplication(applicationToConfirm.Id);
 
             var thesis = topic.Theses.Last();
+
+            thesis.ChangeReviewer(topic.Supervisor);
 
             await _dbContext.Set<Thesis>().AddAsync(thesis).ConfigureAwait(false);
 

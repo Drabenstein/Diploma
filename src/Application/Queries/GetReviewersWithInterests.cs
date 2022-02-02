@@ -21,9 +21,9 @@ public static class GetReviewersWithInterests
                 sqlConnectionFactory ?? throw new ArgumentNullException(nameof(sqlConnectionFactory));
         }
 
-        private const string Sql = "select u.first_name || ' ' || u.last_name as \"Employee\", u.department as \"Department\", u.academic_degree as \"Title\", u.\"position\" as \"Position\", count(r.review_id) as \"ReviewsNumber\", string_agg(aoi.areas_of_interest_id::text, ',') as \"AreasOfInterestIds\" from \"user\" as u join area_of_interest_user as aoi on aoi.users_id = u.user_id" +
-            @"join review as r on u.user_id = r.reviewer_id
-            where aoi.areas_of_interest_id in :AreasOfInterest
+        private const string Sql = "select u.academic_degree as \"Title\", u.first_name || ' ' || u.last_name as Employee, u.department as Department, u.\"position\" as \"Position\", count(r.review_id) as \"ReviewsNumber\", string_agg(aoi.areas_of_interest_id::text, ',') as \"AreasOfInterestIds\" from \"user\" as u join area_of_interest_user as aoi on aoi.users_id = u.user_id" +
+            @" left join review as r on u.user_id = r.reviewer_id
+            where aoi.areas_of_interest_id = any (:AreasOfInterest)
             group by u.user_id
                 having count(r.review_id) >= :MinNumberOfReviews
                 and count(r.review_id) <= :MaxNumberOfReviews
@@ -31,8 +31,8 @@ public static class GetReviewersWithInterests
 
 
         private const string SqlCount = "select count(*) from \"user\" as u join area_of_interest_user as aoi on aoi.users_id = u.user_id" +
-           @"join review as r on u.user_id = r.reviewer_id
-                where aoi.areas_of_interest_id in :AreasOfInterest
+           @" left join review as r on u.user_id = r.reviewer_id
+                where aoi.areas_of_interest_id = any (:AreasOfInterest)
                 group by u.user_id
                     having count(r.review_id) >= :MinNumberOfReviews
                     and count(r.review_id) <= :MaxNumberOfReviews";
@@ -40,10 +40,9 @@ public static class GetReviewersWithInterests
         public async Task<PagedResultDto<ReviewerWithInterestsDto>> Handle(Query request, CancellationToken cancellationToken)
         {
             using var connection = await _sqlConnectionFactory.CreateOpenConnectionAsync().ConfigureAwait(false);
-
             var results = await connection.QueryAsync<ReviewerWithInterestsStringDto>(Sql, new
             {
-                AreasOfInterest = $"({string.Join(',', request.AreaOfInterestIds)})",
+                AreasOfInterest = request.AreaOfInterestIds.ToArray(),
                 MinNumberOfReviews = request.MinNumberOfReviews,
                 MaxNumberOfReviews = request.MaxNumberOfReviews,
                 OffsetRows = (request.Page - 1) * request.ItemsPerPage,
@@ -62,14 +61,22 @@ public static class GetReviewersWithInterests
 
             return await dtos.GetPagedResultAsync(connection, SqlCount, new
             {
-                AreasOfInterest = $"({string.Join(',', request.AreaOfInterestIds)})",
+                AreasOfInterest = request.AreaOfInterestIds.ToArray(),
                 MinNumberOfReviews = request.MinNumberOfReviews,
                 MaxNumberOfReviews = request.MaxNumberOfReviews
             }, request.Page, request.ItemsPerPage).ConfigureAwait(false);
 
         }
 
-        private record ReviewerWithInterestsStringDto(string Title, string Employee, string Department, string Position, int ReviewsNumber, string AreasOfInterestIds);
+        private class ReviewerWithInterestsStringDto
+        {
+            public string Title { get; set; }
+            public string Employee { get; set; }
+            public string Department { get; set; }
+            public string Position { get; set; }
+            public int ReviewsNumber { get; set; }
+            public string AreasOfInterestIds { get; set; }
+        }
 
         public class Validator : AbstractValidator<Query>
         {

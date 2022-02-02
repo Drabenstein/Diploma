@@ -28,7 +28,7 @@ public static class GetTopicsForConsiderationByYearOfDefenceAndField
                 WHERE t.field_of_study_id = :FieldOfStudyId
                     AND t.year_of_defence = :YearOfDefence
                     AND t.is_accepted IS NULL
-                    AND (t.is_proposed_by_student = 0 OR EXISTS (
+                    AND (t.is_proposed_by_student = FALSE OR EXISTS (
                             SELECT * FROM application a
                             WHERE a.topic_id = t.topic_id
                             AND a.status = 'Accepted'
@@ -42,7 +42,7 @@ public static class GetTopicsForConsiderationByYearOfDefenceAndField
                 WHERE t.field_of_study_id = :FieldOfStudyId
                     AND t.year_of_defence = :YearOfDefence
                     AND t.is_accepted IS NULL
-                    AND (t.is_proposed_by_student = 0 OR EXISTS (
+                    AND (t.is_proposed_by_student = FALSE OR EXISTS (
                             SELECT * FROM application a
                             WHERE a.topic_id = t.topic_id
                                 AND a.status = 'Accepted'
