@@ -31,6 +31,7 @@ public static class GetMyThesis
                     .ThenInclude(x => x.FieldOfStudy)
                 .Include(x => x.Reviews)
                     .ThenInclude(x => x.Reviewer)
+                .Include(x => x.Declarations)
                 .FirstOrDefaultAsync(x => x.Id == request.ThesisId)
                 .ConfigureAwait(false);
 
@@ -46,6 +47,7 @@ public static class GetMyThesis
                 SupervisorFullName = ($"{thesis.Topic.Supervisor.FirstName} {thesis.Topic.Supervisor.LastName}".CombineAcademicDegreeAndFullName(thesis.Topic.Supervisor.AcademicDegree.ToString())),
                 YearOfDefence = thesis.Topic.YearOfDefence,
                 FieldOfStudy = thesis.Topic.FieldOfStudy.Name,
+                HasDeclaration = thesis.Declarations.Any(),
                 Reviews = thesis.Reviews
                 .OrderBy(x => x.Reviewer.LastName)
                 .ThenBy(x => x.Reviewer.FirstName)

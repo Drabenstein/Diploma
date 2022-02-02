@@ -11,6 +11,7 @@ public class MyThesisDto
     public string SupervisorFullName { get; set; }
     public string YearOfDefence { get; set; }
     public string FieldOfStudy { get; set; }
+    public bool HasDeclaration { get; set; } 
     
     public IEnumerable<ReviewForMyThesisDto> Reviews { get; set; }
 }
