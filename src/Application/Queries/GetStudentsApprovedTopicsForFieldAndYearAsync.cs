@@ -14,11 +14,12 @@ public static class GetStudentsApprovedTopicsForFieldAndYearAsync
     public class Handler : IRequestHandler<Query, PagedResultDto<StudentsApprovedTopicDto>>
     {
         private const string SqlQuery = @"
-            SELECT t.topic_id as I,
+            SELECT t.topic_id as TopicId,
+                a.application_id as ApplicationId,
                 t.name as Name,
                 t.english_name as EnglishName,
                 a.status as Status,
-                s.academic_degree as AcademicDegree,
+                s.academic_degree as SupervisorAcademicDegree,
                 s.first_name || ' ' || s.last_name as SupervisorFullName,
                 s.department as SupervisorDepartment
             FROM topic t
@@ -40,7 +41,7 @@ public static class GetStudentsApprovedTopicsForFieldAndYearAsync
                 AND t.year_of_defence = :YearOfDefence
                 AND t.field_of_study_id = :FieldOfStudyId
             ";
-            
+
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
 
         public Handler(ISqlConnectionFactory sqlConnectionFactory)

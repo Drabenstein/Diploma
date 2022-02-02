@@ -287,7 +287,7 @@ public class TopicsController : BaseApiController
     [HttpGet]
     [Route("students-approved-topics")]
     [Authorize(Roles = Role.Student)]
-    [ProducesResponseType(typeof(IEnumerable<FieldOfStudyInitialTableDto<TopicForConsiderationDto>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IEnumerable<FieldOfStudyInitialTableDto<StudentsApprovedTopicDto>>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
     public Task<IEnumerable<FieldOfStudyInitialTableDto<StudentsApprovedTopicDto>>>
@@ -298,7 +298,7 @@ public class TopicsController : BaseApiController
     }
 
     /// <summary>
-    /// Gets page of theses open to assign a reviewer for specific field of study id and year of defence
+    /// Gets page of topics which are accepted for current user, for specific field of study id and year of defence
     /// </summary>
     /// <param name="fieldOfStudyId">Field of study id</param>
     /// <param name="yearOfDefence">Year of defence</param>

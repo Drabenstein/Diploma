@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Commands;
 public static class SubmitReview
 {
-    public record Command(string userEmail, FilledReviewModuleDto[] ReviewModules, int ReviewId, string Grade) : IRequest<Unit>;
+    public record Command(string UserEmail, FilledReviewModuleDto[] ReviewModules, int ReviewId, string Grade) : IRequest<Unit>;
 
     public class Handler : IRequestHandler<Command, Unit>
     {
@@ -23,7 +23,7 @@ public static class SubmitReview
         public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
         {
             var user = await _dbContext.Set<Tutor>()
-                .FirstOrDefaultAsync(x => x.Email == request.userEmail)
+                .FirstOrDefaultAsync(x => x.Email == request.UserEmail)
                 .ConfigureAwait(false);
 
             var review = await _dbContext.Set<Review>()
@@ -63,8 +63,6 @@ public static class SubmitReview
                 reviewModules.FirstOrDefault(x => x.Id == module.Id)?.SetValue(module.Value);
             }
 
-            review.SubmitGrade(request.Grade);
-
             thesis.ReviewThesis(request.Grade, request.ReviewId);
 
             await _dbContext.SaveChangesAsync().ConfigureAwait(false);
@@ -78,7 +76,7 @@ public static class SubmitReview
         public Validator()
         {
             RuleFor(x => x.ReviewId).GreaterThan(0);
-            RuleFor(x => x.userEmail).EmailAddress();
+            RuleFor(x => x.UserEmail).EmailAddress();
             RuleFor(x => x.Grade).NotEmpty();
             RuleForEach(x => x.ReviewModules).ChildRules(x =>
             {

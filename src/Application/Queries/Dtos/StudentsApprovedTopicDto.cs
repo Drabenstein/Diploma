@@ -2,7 +2,8 @@
 
 public class StudentsApprovedTopicDto
 {
-    public long Id { get; set; }
+    public int TopicId { get; set; }
+    public int ApplicationId { get; set; }
     public string Name { get; set; } = null!;
     public string EnglishName { get; set; } = null!;
     public string Status { get; set; } = null!;
