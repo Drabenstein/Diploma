@@ -43,7 +43,7 @@ public class ThesesController : BaseApiController
     [HttpGet]
     [Route("my-thesis")]
     [Authorize(Roles = Role.Student)]
-    public Task<MyThesisDto> GetMyThesis([FromQuery] long ThesisId, CancellationToken cancellationToken)
+    public Task<MyThesisDto> GetMyThesis([FromQuery] int ThesisId, CancellationToken cancellationToken)
     {
         string userEmail = GetUserEmail();
         return _mediator.Send(new GetMyThesis.Query(userEmail, ThesisId), cancellationToken);

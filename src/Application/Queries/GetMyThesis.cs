@@ -54,7 +54,7 @@ public static class GetMyThesis
                 .Select(x => new ReviewForMyThesisDto
                 {
                     Id = x.Id,
-                    Grade = x.Grade?.ToString(),
+                    Grade = x.GradeToString(),
                     Timestamp = x.PublishTimestamp,
                     Reviewer = $"{x.Reviewer.FirstName} {x.Reviewer.LastName}"
                 })

@@ -57,4 +57,19 @@ public record Review : EntityBase
         PublishTimestamp = DateTime.UtcNow;
         IsPublished = true;
     }
+
+    public string GradeToString()
+    {
+        return Grade switch
+        {
+            ValueObjects.Grade.Two => "2",
+            ValueObjects.Grade.Three => "3",
+            ValueObjects.Grade.ThreeAndHalf => "3.5",
+            ValueObjects.Grade.Four => "4",
+            ValueObjects.Grade.FourAndHalf => "4.5",
+            ValueObjects.Grade.Five => "5",
+            ValueObjects.Grade.FiveAndHalf => "5.5",
+            _ => "-"
+        };
+    }
 }

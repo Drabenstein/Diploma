@@ -29,7 +29,7 @@ public static class SendDeclaration
         {
             using var connection = await _sqlConnectionFactory.CreateOpenConnectionAsync().ConfigureAwait(false);
 
-            var date = request.declarationDto.DeclarationDateTime.Date.ToString("yyyy-MM-dd");
+            var date = request.declarationDto.DeclarationDateTime.Date;
 
             using (var transaction = connection.BeginTransaction()) 
             {
