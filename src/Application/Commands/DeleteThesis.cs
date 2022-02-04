@@ -15,7 +15,7 @@ public static class DeleteThesis
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
         private readonly IS3Service _s3Service;
 
-        private const string GetCredentialsQuery = @" SELECT cloud_bucket AS Bucket, cloud_key AS Key
+        private const string GetCredentialsQuery = @" SELECT cloud_bucket AS CloudBucket, cloud_key AS CloudKey
                     FROM thesis
                     WHERE thesis_id = :ThesisId
             ";

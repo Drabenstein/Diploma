@@ -20,7 +20,7 @@ public static class UpdateTutorAreasOfInterest
 
         public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
         {
-            var user = await _dbContext.Set<User>()
+            var user = await _dbContext.Set<User>().Include(x => x.AreasOfInterest)
                 .FirstOrDefaultAsync(x => x.Email == request.email, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
