@@ -4,47 +4,43 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Models.Topics;
+using Core.Models.Topics.ValueObjects;
 using Core.Models.Users;
 using FluentAssertions;
 using Xunit;
 
 namespace Core.UnitTests.Topics.TopicTests
 {
-    public class TopicCancelApplicationTests
+    public class TopicCancelApplicationTests : TopicTestBase
     {
-        private readonly Topic topic;
-        private readonly Application application;
-        private readonly Student student;
-
-        public TopicCancelApplicationTests()
+        [Fact]
+        public void WhenApplicationExists_ShouldCancelIt()
         {
-            topic = new Topic()
-            {
-                Name = "Informatyka stosowana",
-                EnglishName = "Applied computer science",
-                IsFree = true,
-                Proposer = FakeDataGenerator.GenerateUser(),
-                IsProposedByStudent = false,
-                MaxRealizationNumber = 4,
-                FieldOfStudy = FakeDataGenerator.GenerateFieldOfStudy(),
-                Supervisor = FakeDataGenerator.GenerateTutor(),
-                YearOfDefence = "2021/2022"
-            };
-            student = FakeDataGenerator.GenerateStudent();
-            application = new Application()
-            {
-                Topic = topic,
-                IsTopicProposal = false,
-                Message = "Test message",
-                Submitter = student,
-                Timestamp = new DateTime(2022, 01, 10)
-            };
+            topic.SubmitApplication(application);
+            
+            topic.CancelApplication(application.Id);
+
+            topic.Applications.First().Status.Should().Be(ApplicationStatus.Cancelled);
         }
 
         [Fact]
-        public void WhenApplicationExists_ShouldRemoveIt()
+        public void WhenApplicationDoesNotExist_ShouldThrow()
         {
+            Action sut = () => topic.CancelApplication(application.Id);
 
+            sut.Should().Throw<Exception>();
+        }
+
+        [Fact]
+        public void WhenApplicationIsAlreadyConfirmed_ShouldThrow()
+        {
+            topic.SubmitApplication(application);
+            topic.AcceptApplication(application.Id);
+            topic.ConfirmApplication(application.Id);
+
+            Action sut = () => topic.CancelApplication(application.Id);
+
+            sut.Should().Throw<InvalidOperationException>();
         }
     }
 }

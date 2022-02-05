@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using Core.Models.Theses;
+﻿using Core.Models.Theses;
 using Core.Models.Topics.ValueObjects;
 using Core.Models.Users;
 using Core.SeedWork;
@@ -16,7 +15,7 @@ public record Topic : EntityBase
     public string Name { get; set; }
     public string EnglishName { get; set; }
     public bool? IsAccepted { get; private set; }
-    public bool IsFree { get; set; }
+    public bool IsFree { get; set; } = true;
     public int MaxRealizationNumber { get; set; }
     public string YearOfDefence { get; set; }
     public bool IsProposedByStudent { get; set; }
@@ -45,7 +44,7 @@ public record Topic : EntityBase
     {
         var application = _applications.Single(x => x.Id == applicationId);
         application.ConfirmApplication();
-        IsFree = _applications.Count(x => x.Status == ApplicationStatus.Confirmed) == MaxRealizationNumber;
+        IsFree = _applications.Count(x => x.Status == ApplicationStatus.Confirmed) < MaxRealizationNumber;
         var thesis = new Thesis(this, application.Submitter);
         _theses.Add(thesis);
     }
@@ -56,6 +55,16 @@ public record Topic : EntityBase
         application.CancelApplication();
     }
 
+    public void SubmitApplication(Application application)
+    {
+        if (_applications.FirstOrDefault(x => x.Submitter == application.Submitter) is not null)
+        {
+            throw new InvalidOperationException("Application from this submitter has already been submitted");
+        }
+
+        _applications.Add(application);
+    }
+    
     public void AcceptTopic()
     {
         ChangeIsAccepted(true);
