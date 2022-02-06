@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Core.UnitTests.Topics.TopicTests;
 
-public class TopicAcceptApplicationTests : TopicTestBase
+public class TopicsAcceptApplicationTests : TopicsTestBase
 {
     [Fact]
     public void WhenApplicationExists_ShouldAcceptIt()

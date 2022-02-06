@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Core.UnitTests.Topics.TopicTests;
 
-public class TopicAcceptTopicTestTests : TopicTestBase
+public class TopicsAcceptTopicsTestTests : TopicsTestBase
 {
     [Fact]
     public void WhenTopicIsAccepted_ShouldChangeAcceptanceFlag()

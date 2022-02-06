@@ -3,13 +3,13 @@ using Core.Models.Users;
 
 namespace Core.UnitTests.Topics;
 
-public abstract class TopicTestBase
+public abstract class TopicsTestBase
 {
     protected readonly Topic topic;
     protected readonly Application application;
     protected readonly Student student;
 
-    public TopicTestBase()
+    public TopicsTestBase()
     {
         topic = new Topic
         {

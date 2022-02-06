@@ -20,7 +20,7 @@ public record Review : EntityBase
     }
 
     public Tutor Reviewer { get; set; }
-    public Grade? Grade { get; set; }
+    public Grade? Grade { get; private set; }
     public bool IsPublished { get; set; }
     public DateTime? PublishTimestamp { get; set; }
     public virtual IReadOnlyCollection<ReviewModule> ReviewModules => _reviewModules.AsReadOnly();
@@ -55,7 +55,6 @@ public record Review : EntityBase
         };
 
         PublishTimestamp = DateTime.UtcNow;
-
         IsPublished = true;
     }
 }

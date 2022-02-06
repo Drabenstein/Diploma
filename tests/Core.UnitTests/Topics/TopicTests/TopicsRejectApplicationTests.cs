@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Core.UnitTests.Topics.TopicTests;
 
-public class TopicRejectApplicationTests : TopicTestBase
+public class TopicsRejectApplicationTests : TopicsTestBase
 {
     [Fact]
     public void WhenApplicationExists_ShouldRejectIt()

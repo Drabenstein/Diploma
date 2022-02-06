@@ -92,6 +92,11 @@ public class UsersController : BaseApiController
     [ProducesResponseType(StatusCodes.Status502BadGateway)]
     public async Task<IActionResult> ChangePasswordAsync([FromBody] ChangePasswordRequest changePasswordRequest, CancellationToken cancellationToken)
     {
+        if (changePasswordRequest.Password is null)
+        {
+            return BadRequest();
+        }
+        
         var userId = GetUserId();
         await _mediator.Send(new ChangePassword.Command(userId, changePasswordRequest.Password), cancellationToken);
         return Ok();

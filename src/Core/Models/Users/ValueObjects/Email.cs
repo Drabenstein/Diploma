@@ -19,7 +19,17 @@ public record Email(string Address)
 
     public static Email CreateStandardTutorEmail(string firstName, string lastName)
     {
-        return new Email($"{firstName}.{lastName}@student.pwr.edu.pl");
+        if (string.IsNullOrWhiteSpace(firstName))
+        {
+            throw new ArgumentNullException(nameof(firstName));
+        }
+
+        if (string.IsNullOrWhiteSpace(lastName))
+        {
+            throw new ArgumentNullException(nameof(lastName));
+        }
+        
+        return new Email($"{firstName.ToLowerInvariant()}.{lastName.ToLowerInvariant()}@pwr.edu.pl");
     }
 
     public static implicit operator string(Email email)

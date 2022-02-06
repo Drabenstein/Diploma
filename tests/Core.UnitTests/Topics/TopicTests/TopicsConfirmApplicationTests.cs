@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Core.UnitTests.Topics.TopicTests;
 
-public class TopicConfirmApplicationTests : TopicTestBase
+public class TopicsConfirmApplicationTests : TopicsTestBase
 {
     [Fact]
     public void WhenApplicationDoesNotExist_ShouldThrow()

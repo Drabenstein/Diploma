@@ -11,7 +11,7 @@ using Xunit;
 
 namespace Core.UnitTests.Topics.TopicTests
 {
-    public class TopicCancelApplicationTests : TopicTestBase
+    public class TopicsCancelApplicationTests : TopicsTestBase
     {
         [Fact]
         public void WhenApplicationExists_ShouldCancelIt()

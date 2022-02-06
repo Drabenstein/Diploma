@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Core.UnitTests.Topics.TopicTests;
 
-public class TopicSubmitApplicationTests : TopicTestBase
+public class TopicsSubmitApplicationTests : TopicsTestBase
 {
     [Fact]
     public void WhenApplicationIsSubmitted_ShouldBeSaved()
