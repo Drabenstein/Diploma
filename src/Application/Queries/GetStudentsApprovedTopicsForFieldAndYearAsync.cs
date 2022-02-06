@@ -29,6 +29,7 @@ public static class GetStudentsApprovedTopicsForFieldAndYearAsync
                 AND a.status IN ('Approved', 'Confirmed')
                 AND t.year_of_defence = :YearOfDefence
                 AND t.field_of_study_id = :FieldOfStudyId
+                AND t.is_accepted = true
             OFFSET :OffsetRows ROWS FETCH NEXT :ItemsPerPage ROWS ONLY";
 
         private const string CountQuery = @"

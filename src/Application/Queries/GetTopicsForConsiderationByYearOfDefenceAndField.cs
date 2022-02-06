@@ -31,7 +31,7 @@ public static class GetTopicsForConsiderationByYearOfDefenceAndField
                     AND (t.is_proposed_by_student = FALSE OR EXISTS (
                             SELECT * FROM application a
                             WHERE a.topic_id = t.topic_id
-                            AND a.status = 'Accepted'
+                            AND a.status = 'Approved'
                         ))
                 ORDER BY s.last_name, s.first_name, s.department
                 OFFSET :OffsetRows ROWS FETCH NEXT :ItemsPerPage ROWS ONLY";
@@ -45,7 +45,7 @@ public static class GetTopicsForConsiderationByYearOfDefenceAndField
                     AND (t.is_proposed_by_student = FALSE OR EXISTS (
                             SELECT * FROM application a
                             WHERE a.topic_id = t.topic_id
-                                AND a.status = 'Accepted'
+                                AND a.status = 'Approved'
                         ))";
 
         private readonly ISqlConnectionFactory _sqlConnectionFactory;

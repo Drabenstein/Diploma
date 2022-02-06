@@ -24,8 +24,19 @@ public static class GetMyApprovedTopics
 
             if (user == null) throw new InvalidOperationException("Invalid user data");
 
+            var a = await _dbContext
+                .Set<Core.Models.Topics.Application>()
+                .Include(x => x.Topic)
+                .ThenInclude(x => x.Supervisor)
+                .Where(x => x.Submitter.Id == user.Id)
+                .Where(x => x.Status == Core.Models.Topics.ValueObjects.ApplicationStatus.Approved)
+                .ToListAsync().ConfigureAwait(false);
+
+
             return await _dbContext
                 .Set<Core.Models.Topics.Application>()
+                .Include(x => x.Topic)
+                .ThenInclude(x => x.Supervisor)
                 .Where(x => x.Submitter.Id == user.Id)
                 .Where(x => x.Status == Core.Models.Topics.ValueObjects.ApplicationStatus.Approved)
                 .Select(x => new ApprovedTopicDto

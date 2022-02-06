@@ -123,7 +123,7 @@ public class TopicsController : BaseApiController
     /// <response code="200">Returns a list of possible thesis supervisors</response>
     [HttpGet]
     [Route("possibleTutors")]
-    [Authorize(Roles = Role.Student)]
+    [Authorize(Roles = Role.Student + "," + Role.ProgramCommittee)]
     public Task<IEnumerable<TutorForApplicationDto>> GetTutorsForApplication(CancellationToken cancellationToken)
     {
         return _mediator.Send(new GetTutorsForApplication.Query(), cancellationToken);
