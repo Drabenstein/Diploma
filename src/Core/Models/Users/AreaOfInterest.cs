@@ -17,7 +17,11 @@ public record AreaOfInterest : EntityBase
 
     public void AddUser(User user)
     {
+        if (_users.Contains(user))
+        {
+            throw new InvalidOperationException("Cannot add user to area of interest multiple times");
+        }
+
         _users.Add(user);
     }
-
 }
