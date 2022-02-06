@@ -16,7 +16,7 @@ public static class GetThesesForReviewerAssignmentForYearOfDefenceAndField
     public class Handler : IRequestHandler<Query, PagedResultDto<ThesisForReviewerAssignmentDto>>
     {
         private const string SqlQuery = @"
-                SELECT  t.thesis_id AS Id,
+                SELECT distinct on (t.thesis_id) t.thesis_id AS Id,
                         top.name AS Name,
                         top.english_name AS EnglishName,
                         supervisor.academic_degree AS SupervisorAcademicDegree,
@@ -32,7 +32,7 @@ public static class GetThesesForReviewerAssignmentForYearOfDefenceAndField
                 WHERE top.field_of_study_id = :FieldOfStudyId
                     AND top.year_of_defence = :YearOfDefence
                     AND t.status <> 'Reviewed'
-                ORDER BY top.year_of_defence DESC, top.field_of_study_id ASC, top.topic_id DESC
+                ORDER BY t.thesis_id desc, top.year_of_defence DESC, top.field_of_study_id ASC, top.topic_id DESC
                 OFFSET :OffsetRows ROWS FETCH NEXT :ItemsPerPage ROWS ONLY";
 
         private const string CountQuery = @"

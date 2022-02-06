@@ -42,12 +42,16 @@ public record Thesis : EntityBase
             throw new InvalidOperationException("Cannot change reviewer of already reviewed thesis");
         }
         
-        var existingReviewerReview = Reviews.FirstOrDefault(x => !x.Reviewer.Equals(this.Topic.Supervisor));
-        
+        var existingReviewerReview = Reviews.FirstOrDefault(x => !x.Reviewer.Equals(Topic.Supervisor));
+        var isReviewerSupervisor = reviewer.Equals(Topic.Supervisor);
+
         if (existingReviewerReview is null)
         {
-            var review = new Review(reviewer);
-            _reviews.Add(review);
+            if (!Reviews.Any() || !isReviewerSupervisor)
+            {
+                var review = new Review(reviewer);
+                _reviews.Add(review);
+            }
         }
         else if (!existingReviewerReview.Reviewer.Equals(reviewer))
         {

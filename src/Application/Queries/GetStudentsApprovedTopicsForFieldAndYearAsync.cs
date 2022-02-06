@@ -26,7 +26,7 @@ public static class GetStudentsApprovedTopicsForFieldAndYearAsync
                 JOIN application a ON a.topic_id = t.topic_id
                 JOIN " + "\"user\"" + @" s ON t.supervisor_id = s.user_id
             WHERE a.submitter_id = :UserId
-                AND a.status IN ('Approved', 'Confirmed')
+                AND a.status IN ('Approved')
                 AND t.year_of_defence = :YearOfDefence
                 AND t.field_of_study_id = :FieldOfStudyId
                 AND t.is_accepted = true
@@ -38,7 +38,7 @@ public static class GetStudentsApprovedTopicsForFieldAndYearAsync
                 JOIN application a ON a.topic_id = t.topic_id
                 JOIN " + "\"user\"" + @" s ON t.supervisor_id = s.user_id
             WHERE a.submitter_id = :UserId
-                AND a.status IN ('Approved', 'Confirmed')
+                AND a.status IN ('Approved')
                 AND t.year_of_defence = :YearOfDefence
                 AND t.field_of_study_id = :FieldOfStudyId
             ";

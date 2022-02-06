@@ -1,4 +1,5 @@
-﻿using Application.Queries.Dtos;
+﻿using Application.Common;
+using Application.Queries.Dtos;
 using Core.Models.Users;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -23,9 +24,9 @@ public static class GetTutorsForApplication
             return await _dbContext.Set<Tutor>().Select(x => new TutorForApplicationDto
             {
                 Id = x.Id,
-                FirstName = x.FirstName,
-                LastName = x.LastName,
-                AcademicDegree = x.AcademicDegree.ToString()
+                FirstName = $"{x.FirstName} {x.LastName}".CombineAcademicDegreeAndFullName(x.AcademicDegree.ToString()),
+                LastName = "",
+                AcademicDegree = ""
             }).ToListAsync().ConfigureAwait(false);
         }
 
