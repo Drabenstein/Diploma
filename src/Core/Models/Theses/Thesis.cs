@@ -24,7 +24,7 @@ public record Thesis : EntityBase
     }
     
     public Topic Topic { get; set; }
-    public ThesisStatus Status { get; set; }
+    public ThesisStatus Status { get; private set; }
     public byte[]? Content { get; set; }
     public ThesisFileFormat? FileFormat { get; set; }
     public ThesisLanguage? Language { get; set; }
@@ -70,17 +70,16 @@ public record Thesis : EntityBase
         }
     }
 
-    public void ReviewThesis(string grade, int reviewId)
+    public void ReviewThesis(string grade, long reviewId)
     {
         if (Status == ThesisStatus.ReadyToReview || Status == ThesisStatus.Reviewed)
         {
-            Status = ThesisStatus.Reviewed;
-
             var review = Reviews.FirstOrDefault(x => x.Id == reviewId);
 
             if (review is null) throw new InvalidOperationException("Submitted review does not correspond to this thesis");
 
             review.SubmitGrade(grade);
+            Status = ThesisStatus.Reviewed;
         }
         else
         {
@@ -88,4 +87,14 @@ public record Thesis : EntityBase
         }
     }
 
+    internal void AddReview(Tutor reviewer)
+    {
+        if (_reviews.Any(x => x.Reviewer == reviewer))
+        {
+            throw new InvalidOperationException("This tutor already is assigned as reviewer");
+        }
+        
+        var review = new Review(reviewer);
+        _reviews.Add(review);
+    }
 }
